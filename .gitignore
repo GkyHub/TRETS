@@ -1,5 +1,9 @@
-# latex git ignore
+# windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
 
+# latex
 *.aux
 *.fdb_latexmk
 *.fls
