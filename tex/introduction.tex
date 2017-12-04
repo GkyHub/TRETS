@@ -1,17 +1,23 @@
-\section{Introduction}
+\section{Introduction}\label{sec:introduction}
 
 Recent research on Neural Network (NN) is showing great improvement over traditional algorithms in computer vision. Various network models, like convolutional neural network (CNN), recurrent neural network (RNN), have been proposed for image, video, and speech process. CNN~\cite{krizhevsky2012imagenet} improves the top-5 image classification accuracy on ImageNet~\cite{ILSVRC15} dataset from 73.8\% to 84.7\% and further helps improve object detection~\cite{girshick2014rich} with its outstanding ability in feature extraction. RNN~\cite{hannun2014deep} achieves state-of-the-art word error rate on speech recognition. In general, NN features a high fitting ability to a wide range of pattern recognition problems. This makes NN a promising candidate to many artificial intelligence applications.
 
 But the computation and storage complexity of NN models are high. The research on NN is also increasing the size of NN models. The largest neural network model for an $224\times224$ image classification requires upto 39 billion floating point operations (FLOP) and more than 500MB model parameters~\cite{simonyan2014very}. As the computation complexity is propotional to the input image size, processing images with higher resolutions may need more than 100 billion operations.
 
-Thus traditional hardware platforms are not suitable for neural network process. A common CPU can perform 10-100G FLOP per second. which is too  
+Traditional hardware platforms are not suitable for neural network process. A common CPU can perform 10-100G FLOP per second, and the power efficieny is usually below 1GOPs/W. So CPUs neither meet the high performance requirements in cloud applications nor the low power requiremetns in mobile applications. In contrast, GPUs offer upto 10TOP/s peak performance and is a good choice for high performance neural network applications. Development frameworks like Caffe~\cite{jia2014caffe} and Tensorflow~\cite{abadi2016tensorflow} also offers easy-to-use interfaces which makes GPU the first choice of neural network acceleration. But GPUs are power consuming and thus not suitable for mobile applications.
 
-2. FPGA benefits from its great flexibility and is a good candidate. a wide range of FPGA servers have been 
+On the other hand, FPGA is becoming a candidate to implement energy efficient neural network accelerator. With a specific hardware design, FPGAs are able to implement high parallelism and make use of the properties of neural network computation to remove unecessary logic. Therefore FPGAs are possible to achieve higher energy efficieny compared with CPU and GPU. 
 
-3. software design
+But FPGA based accelerator designs are still faced with two problems:
+\begin{itemize}
+    \item Current FPGAs usually support working frequency at 100-300MHz, which is much less than CPU and GPU. The FPGA's logic overhead for reconfigurability also reduces the overall system performance. Straight forward design on FPGA is hard to achieve high performance and high energy efficiency.
+    \item Implementation of neural networks on FPGAs is much harder than that on CPUs or GPUs. Development framework like Caffe and Tensorflow for CPU and GPU is needed for FPGA.
+\end{itemize}
+ 
+Many researches on the above two problems have been carried out for energy efficient and flexible FPGA based neural network accelerator. In this paper, we summarize the techniques proposed in these work. Specifically, we will introduce the techiques from the following aspects:
+\begin{itemize}
+    \item We investigate current techniques for high performance and energy efficient neural network accelerator designs. Techniques in both software level and hardware level are evaluated.
+    \item We investigate state-of-the-art automatic design methods of FPGA based neural network accelerators. 
+\end{itemize}
 
-4. hardware design
-
-5. brief summary
-
-6. paper organization
+The rest part of this paper is organized as follows:
