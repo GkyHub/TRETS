@@ -7,9 +7,50 @@ In this section, we investigate the hardware level techniques used in state-of-t
 Computation unit level design affect the peak performance of the neural network accelerator. With a certain FPGA chip, the available resource is limited. A smaller computation unit design means more computation units and higher peak performance. A carefully designed computation unit array can also increase the working frequency of the system and thus improve peak performance.
 
 \subsubsection{Low Bit-width Unit}
-Reduce the number of bit-width for computation is a direct way to reduce the size of computation units. The feasibility of using less bits comes from the quantization methods as introduced in section~\ref{sec:software:quant}. Most of the state-of-the-art FPGA designs replace the 32-bit floating point units with fixed point units. Podili, et al.~\cite{podili2017fast} implements 32-bit fixed point untis for the proposed system. 16-bit fixed point units are widely adopted in \cite{qiu2016going, li2016high, xiao2017exploring, guan2017fp, zhang2016caffeine}. ESE~\cite{han2017ese} adopts 12-bit fixed-point weight and 16-bit fixed point neurons design. Guo, et al.~\cite{guo2017angel} use 8-bit units for their design on embedded FPGA. Recent work is also focusing on extremely narrow bit-width design. Experiments in \cite{nurvitadhi2016accelerating} shows that FPGA implementation of Binarized Neural Network (BNN) outperforms that on CPU and GPU. 
+Reduce the number of bit-width for computation is a direct way to reduce the size of computation units. The feasibility of using less bits comes from the quantization methods as introduced in section~\ref{sec:software:quant}. Most of the state-of-the-art FPGA designs replace the 32-bit floating point units with fixed point units. Podili, et al.~\cite{podili2017fast} implements 32-bit fixed point untis for the proposed system. 16-bit fixed point units are widely adopted in \cite{qiu2016going, li2016high, xiao2017exploring, guan2017fp, zhang2016caffeine}. ESE~\cite{han2017ese} adopts 12-bit fixed-point weight and 16-bit fixed point neurons design. Guo, et al.~\cite{guo2017angel} use 8-bit units for their design on embedded FPGA. Recent work is also focusing on extremely narrow bit-width design. Prost-Boucle, et al.~\cite{prost2017scalable} implements 2-bit multiplication with 1 LUT for ternary network. Experiments in \cite{nurvitadhi2016accelerating} shows that FPGA implementation of Binarized Neural Network (BNN) outperforms that on CPU and GPU. Though BNN suffers from accuracy loss, many designs explore the benefit of using 1 bit for computation~\cite{li20177, nakahara2017batch, zhao2017accelerating, umuroglu2017finn, nakahara2017fully, jiao2017accelerating, moss2017high}.
+
+The designs mentioned above are focused on computation unit for linear quantization. For non-linear quantization, translating the data back to full precision for computation is still of high cost. Samragh, et al.~\cite{samragh2017customizing} proposes the factorized coefficients based dot product implementation. As the possible values of weights are quite limited for non-linear quantization, the proposed computation unit accumulates the multiplicator for each possible value and calculate the result as the weighted sum of the values in look-up table. In this way, the multiplication needed for one output neuron is a constant as the number of values in look-up table. The original multiplications are replaced by random addressed accumulations.
+
+Most of the designs use a same bit-width through the process of a neural network. Qiu, et al.~\cite{qiu2016going} finds that neurons and weights in FC layers can use less bits compared with CONV layers while the accuracy is maintained. Heterogeneous computation units are used in the designs of \cite{zhao2017accelerating, guo2017bit}.
+
+The size of computation units of different bit-width is compared in Figure~\ref{}. The resouce consumption is based on
+
 
 \subsubsection{Fast Convolution Unit}
+For CONV layers, the convolution operations can be accelerated by special algorithms. Fast Fourier Transformation (FFT) based fast convolution is widely adopted in digital signal processing. Zhang, et al.~\cite{zhang2017frequency} propose a 2D FFT based hardware design for efficient CONV layer execution. For an $F\times F$ filter convolved with $K\times K$ filter, FFT converts the $(F-K+1)^2K^2$ multiplications in sapce domain to $F^2$ complex multiplications in frequency domain. For a CONV layer with $M$ input channel and $N$ output channel, $MN$ times of frequency domain multiplications are needed while only $(M+N)$ times FFT/IFFT are needed. The conversion of convolution kernels is once for all. So the domain conversion process are of low cost for CONV layers.  This technique does not work for CONV layers with stride>1 or $1\times 1$ convolution. Ding, et al.~\cite{ding2017c} suggests that a block-wise circular constraint can be applied on the weight matrix. In this way, the matrix vector multiplication in FC layers are converted to a set of 1D convolutions and can further accelerated in frequency domain. This method can also be applied to CONV layers by treating the $K\times K$ convolution kernels as $K\times K$ matrices and is not limited by $K$ or stride.
+
+Frequency domain methods require complex number multiplication. Another kind of fast convolution involves only real number multiplication~\cite{winograd1980arithmetic}. The convolution of a 2D feature map $F_{in}$ with a kernel $K$ using Winograd algorithm is expressed by equation~\ref{eqt:winograd}.
+\begin{equation}\label{eqt:winograd}
+    F_{out} = A^T[(GF_{in}G^T)\odot(BF_{in}B^T)]A
+\end{equation}
+$G$, $B$ and $A$ are transformation matrix which only related to the sizes of kernel and feature map. $\odot$ denotes an element-wise multiplication of two matrices. For a $4\times 4$ feature map convolved with $3\times 3$ kernel, the transformation matrices are described as follows:
+\begin{equation*}
+    G = \left[
+        \begin{array}{ccc}
+            1           & 0            & 0           \\
+            \frac{1}{2} & \frac{1}{2}  & \frac{1}{2} \\
+            \frac{1}{2} & -\frac{1}{2} & \frac{1}{2} \\
+            0           & 0            & 1
+        \end{array}    
+    \right] \quad
+    B = \left[
+        \begin{array}{cccc}
+            1 & 0  & -1 & 0 \\
+            0 & 1  & 1  & 0 \\
+            0 & -1 & 1  & 0 \\
+            0 & 1  & 0  & -1
+        \end{array}
+    \right] \quad
+    A = \left[
+        \begin{array}{cc}
+            1 & 0  \\
+            1 & 1  \\
+            1 & -1 \\
+            0 & -1 
+        \end{array}
+    \right]
+\end{equation*}
+Winograd based methods are also limited by the kernel size and stride as DFT based methods. The most commonly used Winograd transformation is for $3\times 3$ convolution in ~\cite{lu2017evaluating, xiao2017exploring}. 
 
 \subsubsection{Frequency Optimization Methods}
 
