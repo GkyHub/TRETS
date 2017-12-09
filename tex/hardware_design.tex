@@ -64,7 +64,36 @@ To implement high parallelism, neural network accelerators usually implements ma
 
 Latest FPGAs support 700-900MHz DSP theoretical peak working frequency. But existing designs usually work at 100-300MHz~\cite{qiu2016going, guo2017angel, zhang2016caffeine, ma2017optimizing}. As claimed in \cite{wu2017high}, the working frequency is limited by the routing between on-chip SRAM and DSP units. The design in \cite{wu2017high} use different working frequencies for DSP units and surrounding logic. Neighbour slices to each DSP unit are used as local RAMs to separate the clock domain. The prototype design in \cite{wu2017high} achieves the peak DSP working frequency at 741MHz and 891MHz on FPGA chips of different speed grades. Yet this method is not adopted by a complete neural network accelerator design. 
 
-
 \subsection{Loop Mapping Strategies}
+CONV layers and FC layers contribute to most of the computations and storage requirment of a neural network. As introduced in section~\ref{sec:preliminary}. We express the CONV layer function in equation~\ref{eqt:conv} as nested loops in Algorithm~\ref{alg:conv}. To make the code clear to read, we merge the loops along $x$ and $y$ directions for feature maps and 2-D convolution kernels respectively. An FC layer can be treated as a CONV layer with feature map and kernel both of size $1\times 1$.
+
+\begin{algorithm}  
+    \caption{Convolution Layer}
+    \label{alg:conv}
+    \begin{algorithmic}[1] %每行显示行号  
+        \Require feature map $F_{in}$ of size $M\times Y\times X$; 
+                 convolution kernel $Ker$ of size $N\times M\times K\times K$;
+                 bias vector $b$ of size $N$ 
+        \Ensure  feature map $F_{out}$
+        \Function {ConvLayer}{$F_{in}, Ker$}  
+            \State Let $F_{out} \gets $ zero array of size $N\times(Y-K+1)\times(X-K+1)$  
+            \For{$n=1$; $n<N$; $n++$} \Comment Output channel loop
+                \For{$m=1$; $m<M$; $m++$} \Comment Input channel loop
+                    \For{each $(y, x)$ within $(Y-K+1, X-K+1)$} \Comment Feature map loop
+                        \For{each $(ky, kx)$ within $(K, K)$} \Comment Kernel loop
+                            \State $F_{out}[n][y][x] += F_{in}[m][y-ky+1][x-kx+1] * K[n][m][ky][kx]$
+                        \EndFor
+                    \EndFor
+                \EndFor
+                \State $F_{out}[n] += b[n]$
+            \EndFor
+            \State \Return{$F_{out}$}
+        \EndFunction  
+        
+    \end{algorithmic}  
+\end{algorithm}
+
+To accelerate the loops with hardware, we need to unroll a certain part of the loop and map every operation in this part as a hardware computation unit. 
+
 
 \subsection{Memory System}
