@@ -6,7 +6,7 @@ In this section, we investigate the hardware level techniques used in state-of-t
 
 Computation unit level design affect the peak performance of the neural network accelerator. With a certain FPGA chip, the available resource is limited. A smaller computation unit design means more computation units and higher peak performance. A carefully designed computation unit array can also increase the working frequency of the system and thus improve peak performance.
 
-\subsubsection{Low Bit-width Unit}
+\subsubsection{Low Bit-width Unit}\label{sec:hardware:cu:lbu}
 Reduce the number of bit-width for computation is a direct way to reduce the size of computation units. The feasibility of using less bits comes from the quantization methods as introduced in section~\ref{sec:software:quant}. Most of the state-of-the-art FPGA designs replace the 32-bit floating point units with fixed point units. Podili, et al.~\cite{podili2017fast} implements 32-bit fixed point untis for the proposed system. 16-bit fixed point units are widely adopted in \cite{qiu2016going, li2016high, xiao2017exploring, guan2017fp, zhang2016caffeine}. ESE~\cite{han2017ese} adopts 12-bit fixed-point weight and 16-bit fixed point neurons design. Guo, et al.~\cite{guo2017angel} use 8-bit units for their design on embedded FPGA. Recent work is also focusing on extremely narrow bit-width design. Prost-Boucle, et al.~\cite{prost2017scalable} implements 2-bit multiplication with 1 LUT for ternary network. Experiments in \cite{nurvitadhi2016accelerating} shows that FPGA implementation of Binarized Neural Network (BNN) outperforms that on CPU and GPU. Though BNN suffers from accuracy loss, many designs explore the benefit of using 1 bit for computation~\cite{li20177, nakahara2017batch, zhao2017accelerating, umuroglu2017finn, nakahara2017fully, jiao2017accelerating, moss2017high}.
 
 The designs mentioned above are focused on computation unit for linear quantization. For non-linear quantization, translating the data back to full precision for computation is still of high cost. Samragh, et al.~\cite{samragh2017customizing} proposes the factorized coefficients based dot product implementation. As the possible values of weights are quite limited for non-linear quantization, the proposed computation unit accumulates the multiplicator for each possible value and calculate the result as the weighted sum of the values in look-up table. In this way, the multiplication needed for one output neuron is a constant as the number of values in look-up table. The original multiplications are replaced by random addressed accumulations.
@@ -52,9 +52,48 @@ $G$, $B$ and $A$ are transformation matrix which only related to the sizes of ke
 \end{equation*}
 Winograd based methods are also limited by the kernel size and stride as DFT based methods. The most commonly used Winograd transformation is for $3\times 3$ convolution in ~\cite{lu2017evaluating, xiao2017exploring}. 
 
-\subsubsection{Frequency Optimization Methods}
+\subsubsection{DSP Optimization}
+Recent FPGAs implement hardened DSP units together with the reconfigurable logic to offer a high computation capacity. The basic function of a DSP unit is a multiplication accumulation (MAC). The bit-width for multiplication and addition is fixed. When the bit-width used in neural network does not match that of the DSP units, the FPGA is not fully utilized. The latest DSP units in Altera's FPGA implements 2 $18\times 19$ multipliers and can be configured into a $27\times 27$ multiplier or a 32-bit floating point multiplier~\cite{altera_dsp}. That of Xilinx's FPGA implements one $27\times 18$ multiplier~\cite{xilinx_dsp}. As mentioned in section~\ref{sec:hardware:cu:lbu}, many designs adopt multiplication with less or equal than 16 bits, which can cause great DSP under utilization.
 
+Nguyen, et al.~\cite{nguyen2017double} propose the design to implement two narrow bit-width fixed-point multiplication with a single wide bit-width fixed-point multiplier. In this design, $AB$ and $AC$ is executed with one multiplication $A(B<<k+C)$. If $k$ is sufficiently large, the bits for $AB$ and $AC$ does not overlap in the multiplication result and can be directly seperated. The design in~\cite{nguyen2017double} implements two 8-bit multiplications with one $25\times 18$ multiplier, where $k$ is 9. Similar method can be applied on other bit-width and DSPs.
+
+\subsubsection{Frequency Optimization Methods}
+All the above techniques introduced targets at increasing the number of computation units within a certain FPGA. Increasing the working frequency of the computation units also improves the peak performance.
+
+To implement high parallelism, neural network accelerators usually implements matrix-vector multiplication or matrix-matrix multiplications rather than vector inner product as the basic operation. Different computation units share operators. Simply broadcast data to different computation units leads to large fan-out and high routing cost and thus reduce the working frequency. Wei, et al.~\cite{wei2017automated} use the systolic array structure in their design. The shared data are transferred from one computation unit to the next in a chain mode. So the data is not broadcasted and only local connections between different computation units are needed. The drawback is the increase in latency. As the process of a neural network model is determined and the systolic structure is fully pipelined, the latency overhead can be fully covered.
+
+Latest FPGAs support 700-900MHz DSP theoretical peak working frequency. But existing designs usually work at 100-300MHz~\cite{qiu2016going, guo2017angel, zhang2016caffeine, ma2017optimizing}. As claimed in \cite{wu2017high}, the working frequency is limited by the routing between on-chip SRAM and DSP units. The design in \cite{wu2017high} use different working frequencies for DSP units and surrounding logic. Neighbour slices to each DSP unit are used as local RAMs to separate the clock domain. The prototype design in \cite{wu2017high} achieves the peak DSP working frequency at 741MHz and 891MHz on FPGA chips of different speed grades. Yet this method is not adopted by a complete neural network accelerator design. 
 
 \subsection{Loop Mapping Strategies}
+CONV layers and FC layers contribute to most of the computations and storage requirment of a neural network. As introduced in section~\ref{sec:preliminary}. We express the CONV layer function in equation~\ref{eqt:conv} as nested loops in Algorithm~\ref{alg:conv}. To make the code clear to read, we merge the loops along $x$ and $y$ directions for feature maps and 2-D convolution kernels respectively. An FC layer can be treated as a CONV layer with feature map and kernel both of size $1\times 1$.
+
+\begin{algorithm}  
+    \caption{Convolution Layer}
+    \label{alg:conv}
+    \begin{algorithmic}[1] %每行显示行号  
+        \Require feature map $F_{in}$ of size $M\times Y\times X$; 
+                 convolution kernel $Ker$ of size $N\times M\times K\times K$;
+                 bias vector $b$ of size $N$ 
+        \Ensure  feature map $F_{out}$
+        \Function {ConvLayer}{$F_{in}, Ker$}  
+            \State Let $F_{out} \gets $ zero array of size $N\times(Y-K+1)\times(X-K+1)$  
+            \For{$n=1$; $n<N$; $n++$} \Comment Output channel loop
+                \For{$m=1$; $m<M$; $m++$} \Comment Input channel loop
+                    \For{each $(y, x)$ within $(Y-K+1, X-K+1)$} \Comment Feature map loop
+                        \For{each $(ky, kx)$ within $(K, K)$} \Comment Kernel loop
+                            \State $F_{out}[n][y][x] += F_{in}[m][y-ky+1][x-kx+1] * K[n][m][ky][kx]$
+                        \EndFor
+                    \EndFor
+                \EndFor
+                \State $F_{out}[n] += b[n]$
+            \EndFor
+            \State \Return{$F_{out}$}
+        \EndFunction  
+        
+    \end{algorithmic}  
+\end{algorithm}
+
+To accelerate the loops with hardware, we need to unroll a certain part of the loop and map every operation in this part as a hardware computation unit. 
+
 
 \subsection{Memory System}
