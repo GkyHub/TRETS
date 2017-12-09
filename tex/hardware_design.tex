@@ -13,8 +13,16 @@ The designs mentioned above are focused on computation unit for linear quantizat
 
 Most of the designs use a same bit-width through the process of a neural network. Qiu, et al.~\cite{qiu2016going} finds that neurons and weights in FC layers can use less bits compared with CONV layers while the accuracy is maintained. Heterogeneous computation units are used in the designs of \cite{zhao2017accelerating, guo2017bit}.
 
-The size of computation units of different bit-width is compared in Figure~\ref{}. The resouce consumption is based on
+The size of computation units of different bit-width is compared in Figure~\ref{fig:mac_util}. The resouce consumption is the synthesis result by Vivado 2017.2. All the IPs are required to not use DSP resources. Though we tend to use DSPs in real implementations, this result shows the actual hardware cost. It is also common to implement the computation units in a hybrid way like~\cite{qiu2016going}, where some of the operators are implemented by DSP and others by logic.
 
+In neural network,the number of multiplication and addtion is approximately the same. So the sum of resource for multiplier and adder shows the overall cost. Operations with 32-bit fixed point data consumes similar resource as 32-bit floating point operations. For 16-bit operations, using fixed-point format saves about 30\% resource. As introduced in section~\ref{sec:software:quant}, 8-bit fixed point is the bound for linear quantization. Comapred with the 32-bit version, this allows 14$\times$ more hardware operators within the same area of logic. If further research can utilize 4-bit operations, this advantage becomes $54\times$.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=1.0\columnwidth]{fig/mac_util.pdf}
+    \caption{FPGA resource consumption comparison for multiplier and adder with different types of data.}
+    \label{fig:mac_util}
+\end{figure}
 
 \subsubsection{Fast Convolution Unit}
 For CONV layers, the convolution operations can be accelerated by special algorithms. Fast Fourier Transformation (FFT) based fast convolution is widely adopted in digital signal processing. Zhang, et al.~\cite{zhang2017frequency} propose a 2D FFT based hardware design for efficient CONV layer execution. For an $F\times F$ filter convolved with $K\times K$ filter, FFT converts the $(F-K+1)^2K^2$ multiplications in sapce domain to $F^2$ complex multiplications in frequency domain. For a CONV layer with $M$ input channel and $N$ output channel, $MN$ times of frequency domain multiplications are needed while only $(M+N)$ times FFT/IFFT are needed. The conversion of convolution kernels is once for all. So the domain conversion process are of low cost for CONV layers.  This technique does not work for CONV layers with stride>1 or $1\times 1$ convolution. Ding, et al.~\cite{ding2017c} suggests that a block-wise circular constraint can be applied on the weight matrix. In this way, the matrix vector multiplication in FC layers are converted to a set of 1D convolutions and can further accelerated in frequency domain. This method can also be applied to CONV layers by treating the $K\times K$ convolution kernels as $K\times K$ matrices and is not limited by $K$ or stride.
@@ -70,7 +78,7 @@ CONV layers and FC layers contribute to most of the computations and storage req
 \begin{algorithm}  
     \caption{Convolution Layer}
     \label{alg:conv}
-    \begin{algorithmic}[1] %每行显示行号  
+    \begin{algorithmic}[1]
         \Require feature map $F_{in}$ of size $M\times Y\times X$; 
                  convolution kernel $Ker$ of size $N\times M\times K\times K$;
                  bias vector $b$ of size $N$ 
@@ -93,7 +101,17 @@ CONV layers and FC layers contribute to most of the computations and storage req
     \end{algorithmic}  
 \end{algorithm}
 
-To accelerate the loops with hardware, we need to unroll a certain part of the loop and map every operation in this part as a hardware computation unit. 
+To parallelize the execution of the loops, we unroll a certain part of the loops and map every operation in this part as a hardware computation unit. An imappropriate set of loop unroll parameter may lead to serious hardware underutilization. We take an example of three nested loops as shown in Figure~\ref{fig:unrolling}. The big cube denotes all the operations within the loops. The length of each edge denotes the trip count of a loop. The small cube denotes the unrolled kernel, whose edges denote the unrolling parameter. A complete execution of the workload means to fullfill the big cube with small cubes. Figure~\ref{fig:unrolling}(a) shows an appropriate set of unroll parameters. But for Figure~\ref{fig:unrolling}(b), the red part of some of the small cubes are out of the big cube, which means the hardware is wasted.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{fig/unrolling.pdf}
+    \caption{Comparison between appropriate and inappropriate loop unroll parameters. (a) Appropriate parameters. (b) Inappropriate parameters.}
+    \label{fig:unrolling}
+\end{figure}
+
+It is obvious from Figure~\ref{fig:unrolling} that if the trip count of a loop is too small, the unroll parameter for this loop is limited. For a CNN model, the loop dimension varies greatly among different layeres. For a common network used on ImageNet classification like ResNet~\cite{he2016deep}, the channel numbers vary from 3 to 2048, the feature map sizes vary from $224\times 224$ to $7\times 7$, the convolution kernel sizes vary from $7\times 7$ to $1\times 1$. For this reason, various work are proposed focusing on how the unroll parameter should be chosen. 
+
 
 
 \subsection{Memory System}
