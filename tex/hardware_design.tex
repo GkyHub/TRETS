@@ -120,7 +120,7 @@ The above solutions are only for a single layer. But there is hardly a one-size-
 
 Most of the current designs follow one of the above methods for loop unrolling. A special kind of design is for sparse neural network. Han, et al.~\cite{han2017ese} propose the ESE architecture for sparse LSTM network acceleration. Unlike processing a dense network, all the computation units will not work synchronously. This causes difficulty in sharing data between different computation units. ESE implements only the output channel (the output neurons of the FC layers in LSTM) loop unroll within a layer to simplify hardware design and parallelize batch process.
 
-\subsection{System Design}
+\subsection{System Design}\label{sec:hardware:sys}
 
 A typical FPGA based neural network accelerator system is shown in Figure~\ref{fig:sys}. The logic part of the whole system are denoted with the blue boxes. The host CPU issues workload or commands to the FPGA logic part and monitors its working status. On the FPGA logic part, a controller is usually implemented to communicate with host and generates control signals to all the other modules on FPGA. The controller can be an FSM or an instrcution decoder. The on the fly logic part is implemented for certain designs if the data loaded from external memory needs preprocess. This module can be data arrangement module, data shifter~\cite{qiu2016going}, FFT module~\cite{zhang2017frequency}, etc. The computation units are as discussed in section~\ref{sec:hardware:cu} and section~\ref{sec:hardware:lu}.
 
@@ -142,5 +142,19 @@ From system level, the performance of a neural network accelerator is limited by
     \label{fig:roofline}
 \end{figure}
 
-The graph use the computation to communication (CTC) ratio as $x$-axis and hardware performance as $y$-axis. CTC is the number of operations that can be executed with a unit size of memory access. Each hardware design can be treated as a point in the figure. So $y/x$ equals to the bandwidth requirement of the design. Given a certain platform, the availabel bandwidth is limited and can be described as the theoretical bandwidth roof in Figure~\ref{fig:roofline}. Here, we draw the actual bandwidth roof because the achievable  As the logic on an FPGA chip is limited, there is also the computation roof.
+The figure use the computation to communication (CTC) ratio as $x$-axis and hardware performance as $y$-axis. CTC is the number of operations that can be executed with a unit size of memory access. Each hardware design can be treated as a point in the figure. So $y/x$ equals to the bandwidth requirement of the design. Given a certain platform, the availabel bandwidth is limited and can be described as the theoretical bandwidth roof in Figure~\ref{fig:roofline}. But the actual bandwidth roof is below the theoretical roof because for DDR access, the achievable bandwidth depends on the data access pattern. Sequential DDR access achieves much higher bandwidth than random access. The other roof is the computation roof, which is limited by the available resource on FPGA.
+
+So a higher CTC ratio means the hardware is more likely to achieve the computation bound. Increasing the CTC ratio also reduce DDR access, which greatly reduce the energy cost according to~\cite{vlsi_energy}. In section~\ref{sec:hardware:lu}, we have discussed the loop unrolling strategies to increase the parallelism while reducing the waste of computation for a certain network. When the loop unrolling strategy is decided, the scheduling of the rest part of the loops decides how the hardware can reuse data with on-chip buffer. This involves loop tiling and loop interchange strategy.
+
+Loop tiling is a higher level of loop unrolling. All the input data of a loop tile will be stored on-chip and the loop unrolling hardware kernel works on these data. A larger loop tile size means that each tile will be loaded from external memory to on-chip memory less times. Loop interchange strategy decides the processing order of the loop tiles. External memory access happens when the hardware is moving from one tile to the next. Neighbouring tile may share a part of data. For example in a CONV layer, neighbouring tile can share input feature map or the weights. This is decided by the execution order of the loops. 
+
+In ~\cite{zhang2015optimizing, ma2017optimizing}, design space exploration is done on all the possible loop tiling sizes and loop orders. Many designs also explores the design space though some of the loop unrolling, tiling and loop order is already decided~\cite{motamedi2016design, qiu2016going}. Shen, et al.~\cite{shen2017escher} also discuss the affect of batch parallelism over the CTC for different layers. This is a loop dimension not focused on in previous work.
+
+All the above work give one optimized loop unrolling strategy and loop order for a whole network. Guo, et al.~\cite{guo2017angel} implements flexible unrolling and loop order configuration for different layers with an instruction interface. The data arrangement in on-chip buffers are controlled through instructions to fit with different feature map sizes. This means the hardware can always fully utilize the on-chip buffer to use the largest tiling size according to on-chip buffer size. This work also propose the "back and forth" loop execution order to avoid total on-chip data refresh when a innermost loop finishes.
+
+Alwani, et al.~\cite{alwani2016fused} address the external memory access problem by fusing two neighbouring layers together to avoid the intermediate result transfer between the two layers. This strategy also helps the CPU based program to increase cache hit rate.
+
+
+
+
 
