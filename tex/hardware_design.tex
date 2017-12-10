@@ -131,4 +131,16 @@ A typical FPGA based neural network accelerator system is shown in Figure~\ref{f
     \label{fig:sys}
 \end{figure}
 
-The memory hiearchy of the system mainly contains three parts, denoted as the green boxes in Figure~\ref{fig:sys}: Host DDR, FPGA DDR and on-chip block RAM. For state-of-the-art network, 
+The memory hiearchy of the system mainly contains three parts, denoted as the green boxes in Figure~\ref{fig:sys}: Host DDR, FPGA DDR and on-chip block RAM. For state-of-the-art network, the number of weights can reach up to 100M. Using even 8-bit or less bit-width quantization will result in tens of MB storage requirement. Most of the current FPGAs implements less than 10MB on-chip memory and 1-8GB external DDR integrated on board. So for common designs, a two level memory hiearchy is used with DDR and on-chip memory. 
+
+From system level, the performance of a neural network accelerator is limited by two factor: the on-chip computation resource and the off-chip memory bandwidth. Various researches have been proposed to achieve the best performance within a certain off-chip memory bandwidth. Zhang, et al.~\cite{zhang2015optimizing} introduce the roofline model in their work to analyze whether a design is memory bounded or computation bounded. An example of a roofline model is shown in Figure~\ref{fig:roofline}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\columnwidth]{fig/roofline.pdf}
+    \caption{An example of the roofline model. The shaded part denotes the valid design space given bandwidth and resource limitation.}
+    \label{fig:roofline}
+\end{figure}
+
+The graph use the computation to communication (CTC) ratio as $x$-axis and hardware performance as $y$-axis. CTC is the number of operations that can be executed with a unit size of memory access. Each hardware design can be treated as a point in the figure. So $y/x$ equals to the bandwidth requirement of the design. Given a certain platform, the availabel bandwidth is limited and can be described as the theoretical bandwidth roof in Figure~\ref{fig:roofline}. Here, we draw the actual bandwidth roof because the achievable  As the logic on an FPGA chip is limited, there is also the computation roof.
+
