@@ -2,7 +2,7 @@
 
 In this section, we investigate the hardware level techniques used in state-of-the-art FPGA based neural network accelerator design to achieve high performance and high energy efficiency. We classify the techniques into 3 levels: computation unit level, loop unrolling level, and system level.
 
-\subsection{Computation Unit Designs}
+\subsection{Computation Unit Designs}\label{sec:hardware:cu}
 
 Computation unit level design affect the peak performance of the neural network accelerator. With a certain FPGA chip, the available resource is limited. A smaller computation unit design means more computation units and higher peak performance. A carefully designed computation unit array can also increase the working frequency of the system and thus improve peak performance.
 
@@ -72,7 +72,7 @@ To implement high parallelism, neural network accelerators usually implements ma
 
 Latest FPGAs support 700-900MHz DSP theoretical peak working frequency. But existing designs usually work at 100-300MHz~\cite{qiu2016going, guo2017angel, zhang2016caffeine, ma2017optimizing}. As claimed in \cite{wu2017high}, the working frequency is limited by the routing between on-chip SRAM and DSP units. The design in \cite{wu2017high} use different working frequencies for DSP units and surrounding logic. Neighbour slices to each DSP unit are used as local RAMs to separate the clock domain. The prototype design in \cite{wu2017high} achieves the peak DSP working frequency at 741MHz and 891MHz on FPGA chips of different speed grades. Yet this method is not adopted by a complete neural network accelerator design. 
 
-\subsection{Loop Unrolling Strategies}
+\subsection{Loop Unrolling Strategies}\label{sec:hardware:lu}
 CONV layers and FC layers contribute to most of the computations and storage requirment of a neural network. As introduced in section~\ref{sec:preliminary}. We express the CONV layer function in equation~\ref{eqt:conv} as nested loops in Algorithm~\ref{alg:conv}. To make the code clear to read, we merge the loops along $x$ and $y$ directions for feature maps and 2-D convolution kernels respectively. An FC layer can be treated as a CONV layer with feature map and kernel both of size $1\times 1$. Besides the loops in Algorithm~\ref{alg:conv}, we also parallelize the process of multiple inputs as a batch. This forms the batch loop.
 
 \begin{algorithm}  
@@ -121,3 +121,14 @@ The above solutions are only for a single layer. But there is hardly a one-size-
 Most of the current designs follow one of the above methods for loop unrolling. A special kind of design is for sparse neural network. Han, et al.~\cite{han2017ese} propose the ESE architecture for sparse LSTM network acceleration. Unlike processing a dense network, all the computation units will not work synchronously. This causes difficulty in sharing data between different computation units. ESE implements only the output channel (the output neurons of the FC layers in LSTM) loop unroll within a layer to simplify hardware design and parallelize batch process.
 
 \subsection{System Design}
+
+A typical FPGA based neural network accelerator system is shown in Figure~\ref{fig:sys}. The logic part of the whole system are denoted with the blue boxes. The host CPU issues workload or commands to the FPGA logic part and monitors its working status. On the FPGA logic part, a controller is usually implemented to communicate with host and generates control signals to all the other modules on FPGA. The controller can be an FSM or an instrcution decoder. The on the fly logic part is implemented for certain designs if the data loaded from external memory needs preprocess. This module can be data arrangement module, data shifter~\cite{qiu2016going}, FFT module~\cite{zhang2017frequency}, etc. The computation units are as discussed in section~\ref{sec:hardware:cu} and section~\ref{sec:hardware:lu}.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{fig/sys.pdf}
+    \caption{Block graph of a typical FPGA based neural network accelerator system}
+    \label{fig:sys}
+\end{figure}
+
+The memory hiearchy of the system mainly contains three parts, denoted as the green boxes in Figure~\ref{fig:sys}: Host DDR, FPGA DDR and on-chip block RAM. For state-of-the-art network, 
