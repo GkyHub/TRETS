@@ -1,17 +1,34 @@
-\section{Performance Evalutation}
+\section{Evalutation}\label{sec:evaluation}
+
+In this section, we compare the performance of state-of-the-art neural network accelerator designs and try to evaluate the techniques mentiond in section~\ref{sec:software} and section~\ref{sec:hardware}. The designs used for comparison are listed in Table~\ref{tab:hardware_list}. For data format, the "INT A/B" means that neurons are A-bit fixed point data and weights are B-bit fixed point data. We also investigate the resource utilization and draw advices to both accelerator designers and FPGA manufacturers.
 
 \input{table/hardware_list.tex}
 
-\begin{figure}[h]
+\subsection{Speed, Power and Efficiency}
+
+Each of the designs in Table~\ref{tab:hardware_list} drawn as a point in Figure~\ref{fig:efficiency}, using $log_{10}(power)$ as x coordinate and $log_{10}(speed)$ as y axis. Therefore, $y-x=log_{10}(energy\_efficiency)$. Besides the FPGA based designs, we also plot the GPU experimental results used in \cite{guo2017angel, han2017ese} as standards to measure the FPGA designs' performance.
+
+\subsubsection{Bit-width Reduction} Among all the designs, 1-2 bit based designs show outstanding speed and energy efficiency. This shows that extremely low bitwidth is a promising solution for high performance design. As introduced in section~\ref{sec:software:quant}, 1-2 bit network models suffer from great accuracy loss, so this technique is better applied on simple tasks now. The energy efficiency is improved by about 100$times$ comapred with 32-bit floating point designs. But there is still a great gap towards the $1000\times$ improvment estimation. This shows that memory access becomes the bottleneck for 1-2 bit designs, which only scales linearly with the bit-width. INT16/8, INT16 and INT8 are commonly adopted. But the difference between these designs are not obvious. This is due to the fact that current FPGAs implement wide multipliers in DSPs like $18\times 15$ or $18\times 18$. Using a less bits for computaion will not benefit the DSPs. The double MAC technique by~\cite{nguyen2017double} serves as a solution but is not adopted in the listed designs.
+
+
+\subsubsection{Fast Convolution Algorithm} Among all the 16-bit designs, \cite{lu2017evaluating} achieves the best energy efficiency and the highest speed with the help of the $6\times 6$ Winograd fast convolution, which is $1.7\times$ faster and $2.6\times$ energy efficient than the 16-bit design in \cite{zhang2017improving}. The design in \cite{zhang2017frequency} achieves $2\times$ speedup and $3\times$ energy efficiency compared with \cite{zhang2015optimizing} where both designs use 32-bit floating point data. Overall, the improvement does not match the estimation but can still reach 2-3$\times$.
+
+\subsubsection{System Level Optimization} The overall system optimization is not well addressed in most of the work. As this is also related to the HDL design quality, we only try to evaluate the effect. Here we compare three designs\cite{zhang2016caffeine, liu2016automatic, li2016high} on the same XC7VX690T platform and try to evaluate the effect. All the three designs implement 16-bit fixed-point data format except that ~\cite{liu2016automatic} uses 8-bit for weights. No fast convolution or sparsity is utilized in any of the work. Even though, \cite{li2016high} achieves $2.5\times$ the energy efficiency of \cite{liu2016automatic}. It shows that a system level optimization has a strong effect even comparable to the usage of fast convolution algorithm. 
+
+In general, FPGA based designs have achieved comparable energy efficiency to GPU with 10-100GOP/J. But the speed of GPUs still surpass FPGAs.Scaling up the FPGA based design is still a problem. Zhang, et al.~\cite{zhang2016energy} propose the FPGA cluster based solution using 16-bit fixed point computation. But the energy efficiency is worse than the other 16-bit fixed-point designs. 
+
+\begin{figure}[ht]
     \centering
-    \includegraphics[width=0.6\columnwidth]{fig/efficiency.pdf}
+    \includegraphics[width=1.0\columnwidth]{fig/efficiency.pdf}
     \caption{A comparison between different designs on a logarithm coordinate of power and performance. }
-    \label{fig:roofline}
+    \label{fig:efficiency}
 \end{figure}
 
-\begin{figure}[h]
+\subsection{Resource Utilization}
+
+\begin{figure}[ht]
     \centering
     \includegraphics[width=1.0\columnwidth]{fig/resource.pdf}
     \caption{Resource utilization ratio of different accelerator designs.}
-    \label{fig:roofline}
+    \label{fig:resource}
 \end{figure}
