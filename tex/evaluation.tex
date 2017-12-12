@@ -15,7 +15,7 @@ Each of the designs in Table~\ref{tab:hardware_list} drawn as a point in Figure~
 
 \subsubsection{System Level Optimization} The overall system optimization is not well addressed in most of the work. As this is also related to the HDL design quality, we only try to evaluate the effect. Here we compare three designs\cite{zhang2016caffeine, liu2016automatic, li2016high} on the same XC7VX690T platform and try to evaluate the effect. All the three designs implement 16-bit fixed-point data format except that ~\cite{liu2016automatic} uses 8-bit for weights. No fast convolution or sparsity is utilized in any of the work. Even though, \cite{li2016high} achieves $2.5\times$ the energy efficiency of \cite{liu2016automatic}. It shows that a system level optimization has a strong effect even comparable to the usage of fast convolution algorithm. 
 
-In general, FPGA based designs have achieved comparable energy efficiency to GPU with 10-100GOP/J. But the speed of GPUs still surpass FPGAs.Scaling up the FPGA based design is still a problem. Zhang, et al.~\cite{zhang2016energy} propose the FPGA cluster based solution using 16-bit fixed point computation. But the energy efficiency is worse than the other 16-bit fixed-point designs. 
+\subsubsection{Comparision with GPU} In general, FPGA based designs have achieved comparable energy efficiency to GPU with 10-100GOP/J. But the speed of GPUs still surpass FPGAs.Scaling up the FPGA based design is still a problem. Zhang, et al.~\cite{zhang2016energy} propose the FPGA cluster based solution using 16-bit fixed point computation. But the energy efficiency is worse than the other 16-bit fixed-point designs. 
 
 \begin{figure}[ht]
     \centering
@@ -25,6 +25,7 @@ In general, FPGA based designs have achieved comparable energy efficiency to GPU
 \end{figure}
 
 \subsection{Resource Utilization}
+We also investigate the resource utilization of the designs in Table~\ref{tab:hardware_list}. Three kinds of resouce are considered, DSP, BRAM, and logic. We plot the designs in Figure~\ref{fig:resource} using two of the utilization ratio as x and y coordinate
 
 \begin{figure}[ht]
     \centering
