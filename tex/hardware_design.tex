@@ -4,7 +4,7 @@ In this section, we investigate the hardware level techniques used in state-of-t
 
 \subsection{Computation Unit Designs}\label{sec:hardware:cu}
 
-Computation unit level design affect the peak performance of the neural network accelerator. With a certain FPGA chip, the available resource is limited. A smaller computation unit design means more computation units and higher peak performance. If the computation units are simplified, this also A carefully designed computation unit array can also increase the working frequency of the system and thus improve peak performance.
+Computation unit level design affect the peak performance of the neural network accelerator. With a certain FPGA chip, the available resource is limited. A smaller computation unit design means more computation units and higher peak performance. If the computation units are simplified or the actual number of computation number is reduced, then the  this also A carefully designed computation unit array can also increase the working frequency of the system and thus improve peak performance.
 
 \subsubsection{Low Bit-width Unit}\label{sec:hardware:cu:lbu}
 Reduce the number of bit-width for computation is a direct way to reduce the size of computation units. The feasibility of using less bits comes from the quantization methods as introduced in section~\ref{sec:software:quant}. Most of the state-of-the-art FPGA designs replace the 32-bit floating point units with fixed point units. Podili, et al.~\cite{podili2017fast} implements 32-bit fixed point untis for the proposed system. 16-bit fixed point units are widely adopted in \cite{qiu2016going, li2016high, xiao2017exploring, guan2017fp, zhang2016caffeine}. ESE~\cite{han2017ese} adopts 12-bit fixed-point weight and 16-bit fixed point neurons design. Guo, et al.~\cite{guo2017angel} use 8-bit units for their design on embedded FPGA. Recent work is also focusing on extremely narrow bit-width design. Prost-Boucle, et al.~\cite{prost2017scalable} implements 2-bit multiplication with 1 LUT for ternary network. Experiments in \cite{nurvitadhi2016accelerating} shows that FPGA implementation of Binarized Neural Network (BNN) outperforms that on CPU and GPU. Though BNN suffers from accuracy loss, many designs explore the benefit of using 1 bit for computation~\cite{li20177, nakahara2017batch, zhao2017accelerating, umuroglu2017finn, nakahara2017fully, jiao2017accelerating, moss2017high}.
@@ -105,7 +105,7 @@ CONV layers and FC layers contribute to most of the computations and storage req
 
 To parallelize the execution of the loops, we unroll a certain part of the loops and map every operation in this part as a hardware computation unit. An imappropriate set of loop unroll parameter may lead to serious hardware underutilization. We take an example of three nested loops as shown in Figure~\ref{fig:unrolling}. The big cube denotes all the operations within the loops. The length of each edge denotes the trip count of a loop. The small cube denotes the unrolled kernel, whose edges denote the unrolling parameter. A complete execution of the workload means to fullfill the big cube with small cubes. Figure~\ref{fig:unrolling}(a) shows an appropriate set of unroll parameters. But for Figure~\ref{fig:unrolling}(b), the red part of some of the small cubes are out of the big cube, which means the hardware is wasted.
 
-\begin{figure}[t]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\columnwidth]{fig/unrolling.pdf}
     \caption{Comparison between appropriate and inappropriate loop unroll parameters. (a) Appropriate parameters. (b) Inappropriate parameters.}
@@ -157,7 +157,3 @@ All the above work give one optimized loop unrolling strategy and loop order for
 Alwani, et al.~\cite{alwani2016fused} address the external memory access problem by fusing two neighbouring layers together to avoid the intermediate result transfer between the two layers. This strategy helps reduce 95\% off-chip data transfer with extra 20\% on-chip memory cost. Even software program gains $2\times$ speedup with this scheduling strategy.
 
 Besides increasing CTC, increasing the actual bandwidth roof helps improve the attainable performance with a certain CTC ratio. This is achieved by regularize the DDR access pattern. Common data format in external memory includes $NCHW$ or $CHWN$, where $N$ means the batch dimension, $C$ means the channel dimension, $H$ and $W$ means the feature map $y$ and $x$ dimension. Using any of these format, a feature map tile may be cut into small data blocks stored in discontinuous addresses. Guan~\cite{guan2017fp} suggest that a channel major storage format should be used for their design. This format avoids data duplication while long DDR access burst is ensured. Qiu et al.~\cite{qiu2016going} propose a feature map storage format that arranges the $H\times W$ feature map into $(HW/rc)$ tile blocks of size $r\times c$. So the write burst size can be increased from $c/2$ to $rc/2$.
-
-
-
-
