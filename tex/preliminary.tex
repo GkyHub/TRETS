@@ -1,8 +1,28 @@
-\section{Preliminary on Neural Network}\label{sec:preliminary}
+\section{Preliminary}\label{sec:preliminary}
+
+\rev{Before discussing the system design for neural network acceleration, we first introduce the basic concepts of neural networks and the basic components of an FPGA-based accelerator design.}
+
+\subsection{Neural Network}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1.0\columnwidth]{fig/cnn_preliminary.pdf}
+    \caption{(a) Computation graph of a neural network model. (b) CONV and FC layers in NN model. (c) CONV and FC layers dominates the computation and parameter of a NN model.}
+    \label{fig:cnn_preliminary}
+\end{figure}
+
+\rev{In this section, we introduce the basic functions in a neural network. A neural network model can be described as a directed graph shown in Figure~\ref{fig:cnn_preliminary}(a). Each vertex of the graph denotes a layer which conducts operations on data from a previous layer or input and generates results to the next layer or output.
+
+Convolution (CONV) layers and fully connected (FC) layers are two common types of layers in NN models. The functions of these two layers are shown in Figure~\ref{fig:cnn_preliminary}(b). CONV layers conduct 2D convolutions on a set of input feature maps $F_{in}$ and add the results to get output feature maps $F_{out}$. FC layers receives a feature vector as input and conduct matrix-vector multiplications.
+}
+
+\subsection{FPGA-based Accelerator}
+
+\rev{}
 
 In this section, we introduce the basic operations included in neural network algorithms. Neural network is a bio-inspired model, which usually includes several layers of $neuron$. Each layer receives the neurons of the previous layer as input. In a basic neural network layer, each neuron of this layer calculates a weighted sum of all the input neurons connected to it. The weight of the connections are referred to as $weights$ in this paper. Other types of layers are also introduced in state-of-the-art neural network models. In the rest part of this section, we introduce different types of layers.
 
-{\bf{Fully conencted (FC) layer}} implements a connection between every input neuron and output neuron with a weight. This type of layer is adopted in both CNN and RNN. The input and output neurons of an FC layer are two vectors $\bf{x}$ and $\bf{y}$. The weights of this layer can be modeled as a matrix $W$. A bias vector $b$ is added to each of the output neuron. The function of this layer is described as equation~\ref{eqt:fc}.
+{\bf{Fully conencted (FC) layer}} implements a connection between every input neuron and output neuron with a weight. This type of layer is adopted in both CNN and RNN. The input and output neurons of an FC layer are two vectors $\bf{x}$ and $\bf{y}$. The weights of this layer can be modeled as a matrix $W$. A bias vector $b$ is added to each of the output neuron. The function of this layer is described as equation.
 \begin{equation}\label{eqt:fc}
     {\bf{x}} = W{\bf{y}} + {\bf{b}}
 \end{equation}
