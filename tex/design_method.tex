@@ -1,6 +1,6 @@
 \section{Design Methodology}\label{sec:design_method}
 
-Before going into the details of the techniques used for fast and energy efficient neural network accelerator, we first give an overview of the design methodology. In general, the design target of a neural network processing system includes the following three aspects: high model accuracy, high throughput and high energy efficiency. For certain applications, high flexibility should also be considered.
+Before going into the details of the techniques used for neural network accelerators, we first give an overview of the design methodology. In general, the design target of a neural network processing system includes the following aspects: high model accuracy, high throughput, lower latency, and high energy efficiency.
 
 In general, a larger neural network model usually results in a higher model accuracy. Different network structures like the ones in~\cite{krizhevsky2012imagenet, simonyan2014very, he2016deep} surely affect model accuracy, but is out of the discussion of this paper. With a same model, applying model compression methods can acheive the trade-off between throughput and model accuracy. Some of the model compression methods even achieves acceleration without model accuracy loss.
 
@@ -16,4 +16,4 @@ Energy efficiency is evaluated by the number of operations (multiplication or ad
 
 The first item in equation~\ref{eqt:energy} is the energy cost for computation. This part is greatly affected by model compression. Model compression methods can reduce the actual number of operations ($N_{effect\_op}$) to be executed on hardware and simplify the operations to reduce the unit energy cost of a single operation ($E_{unit\_op}$). Given an FPGA chip, $E_{unit\_op}$ is also affected by its hardware implementation. The second item in equation~\ref{eqt:energy} is the energy cost for memory access. The number of memory access $N_{mem\_access}$ is affected by the memory system and scheduling method. The energy for each memory access can be reduced by model compression methods by using a narrower data bit-width. 
 
-From the analysis of throughput and energy, we see that neural network accelerator involves software-hardware co-design. In the following sections, we will introduce previous work in software and hardware level respectively. 
+From the analysis of throughput and energy, we see that neural network accelerator involves software-hardware co-design. In the following sections, we will introduce previous work in software and hardware level respectively.

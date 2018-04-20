@@ -11,11 +11,11 @@
     \label{fig:cnn_preliminary}
 \end{figure}
 
-\rev{In this section, we introduce the basic functions in a neural network. A neural network model can be described as a directed graph shown in Figure~\ref{fig:cnn_preliminary}(a). Each vertex of the graph denotes a layer which conducts operations on data from a previous layer or input and generates results to the next layer or output.
+\rev{In this section, we introduce the basic functions in a neural network. In this paper, we only focus on the inference of NN, which means using a trained model to predict or classify new data. The training process of NN is not discussed in this paper. A neural network model can be described as a directed graph shown in Figure~\ref{fig:cnn_preliminary}(a). Each vertex of the graph denotes a layer which conducts operations on data from a previous layer or input and generates results to the next layer or output. We refer the parameter of each layer as weights and the input/output as activations through this paper. 
 
 Convolution (CONV) layers and fully connected (FC) layers are two common types of layers in NN models. The functions of these two layers are shown in Figure~\ref{fig:cnn_preliminary}(b). CONV layers conduct 2D convolutions on a set of input feature maps $F_{in}$ and add the results to get output feature maps $F_{out}$. FC layers receives a feature vector as input and conduct matrix-vector multiplications.
 
-Besides CONV and FC layers, NN layers also have pooling, ReLU~\cite{krizhevsky2012imagenet}, concat~\cite{szegedy2015going}, element-wise~\cite{he2016deep} and other types of layers. But these layers contributes little to the computation and storage requirement of a neural network model. Figure~\ref{fig:cnn_preliminary}(c) shows the distribution of parameter and operations in the VGG-11 model~\cite{simonyan2014very}. CONV and FC layers together contributes more than 99\% of the network's parameters and operations. So most of the neural network acceleration systems focus on these two types of layers.
+Besides CONV and FC layers, NN layers also have pooling, ReLU~\cite{krizhevsky2012imagenet}, concat~\cite{szegedy2015going}, element-wise~\cite{he2016deep} and other types of layers. But these layers contributes little to the computation and storage requirement of a neural network model. Figure~\ref{fig:cnn_preliminary}(c) shows the distribution of weights and operations in the VGG-11 model~\cite{simonyan2014very}. CONV and FC layers together contributes more than 99\% of the network's weights and operations. So most of the neural network acceleration systems focus on these two types of layers.
 }
 
 \subsection{FPGA-based Accelerator}
@@ -34,6 +34,6 @@ acceleartor with the software on the host.
 
 Typical FPGA chips implement large on-chip storage units like registers and SRAMs, but still too small compared with NN models as shown in Figure~\ref{fig:fpga_preliminary}(b). Common models implement 100-1000MB parameters while the largest available FPGA chip implements <50MB on-chip SRAM. This requires that external memory like DDR SDRAM is needed. The bandwidth and power consumption of DDR limits the system performance.
 
-Compared with storage, the computation capacity of FPGA is relatively higher. Common FPGAs implements hundreds to thousands of DSP units, each of which can compute $18\times 27$ or $18\times 19$, achieving upto 10TFLOP/s (floating point operations per second) on the largest FPGAs. But for low-end FPGAs like Xilinx XC7Z020, this number is reduced to 20GFLOP/s, which is hard to support real-time video processing for applications on mobile platforms. 
+The computation capacity of FPGA is relatively higher. Common FPGAs implements hundreds to thousands of DSP units, each of which can compute $18\times 27$ or $18\times 19$, achieving upto 10TFLOP/s (floating point operations per second) on the largest FPGAs. But for low-end FPGAs like Xilinx XC7Z020, this number is reduced to 20GFLOP/s. which is hard to support real-time video processing for applications on mobile platforms. 
 
 Even faced with the above challenges, researchers have proposed a series of optimization methods from algorithm to architecture to design high performance NN accelerators on FPGA, which will be discussed in the following sections of this paper.}
