@@ -20,6 +20,17 @@ Besides CONV and FC layers, NN layers also have pooling, ReLU~\cite{krizhevsky20
 
 \subsection{FPGA-based Accelerator}
 
-\rev{Recent years, FPGA is becoming a promising solution for accelerating certain algorithms. Compared with CPU, GPU, and DSP platforms, for which the software and hardware are designed independently, FPGA enables the developers to implement only the necessary logic in hardware according to the target algorithm. By eliminating the redundancy in hardware, FPGA is able to achieve higher efficiency. Similar to FPGA, application specific integrated circuit (ASIC) 
+\rev{In recent years, FPGA is becoming a promising solution for accelerating certain algorithms. Compared with CPU, GPU, and DSP platforms, for which the software and hardware are designed independently, FPGA enables the developers to implement only the necessary logic in hardware according to the target algorithm. By eliminating the redundancy in general hardware platforms, FPGAs are able to achieve higher efficiency. Application specific integrated circuits (ASICs) based solutions achieves even higher efficiency, but requires much longer development cycle and higher cost. 
 
-For FPGA-based neural network accelerator, a typical architecture of the system is shown in Figure~\ref{}.}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{fig/fpga_preliminary.pdf}
+    \caption{\rev{(a) A typical structure of an FPGA based NN accelerator. (b) Comparison between NN model size and the storage on different FPGA chips.}}
+    \label{fig:fpga_preliminary}
+\end{figure}
+
+For FPGA-based neural network accelerator, a typical architecture of the system is shown in Figure~\ref{fig:fpga_preliminary}(a). The system usually consists of a CPU host and an FPGA part. A pure FPGA chip usually works with a host PC/server through PCIe connections. SoC platforms (like the Xilinx Zynq Series) and Intel HARPv2~\cite{gupta2016accelerating} platform integrates the host and the FPGA in the same chip or package. Both the host and the FPGA can work with their own external memory and access each others' memory through the connection. Most of the designs implements NN accelerator on the FPGA part and controls the 
+acceleartor with the software on the host.
+
+Typical FPGA chips implement large on-chip storage units like registers and SRAMs, but still too small compared with NN models as shown in Figure~\ref{fig:fpga_preliminary}(b). Common models implement 100-1000MB parameters while the largest available FPGA chip implements <50MB on-chip SRAM. This requires that external memory like DDR SDRAM is needed. The bandwidth and power consumption of DDR limits the system performance.
+}
