@@ -12,3 +12,6 @@ Desktop.ini
 *.synctex.gz
 *.bbl
 *.blg
+~$*.docx
+~$*.pptx
+~$*.xlsx
