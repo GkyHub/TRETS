@@ -1,6 +1,8 @@
 \section{Evalutation}\label{sec:evaluation}
 
-In this section, we compare the performance of state-of-the-art neural network accelerator designs and try to evaluate the techniques mentiond in section~\ref{sec:software} and section~\ref{sec:hardware}. The designs used for comparison are listed in Table~\ref{tab:hardware_list}. For data format, the "INT A/B" means that neurons are A-bit fixed point data and weights are B-bit fixed point data. We also investigate the resource utilization and draw advices to both accelerator designers and FPGA manufacturers.
+In this section, we compare the performance of state-of-the-art neural network accelerator designs and try to evaluate the techniques mentiond in section~\ref{sec:software} and section~\ref{sec:hardware}. We mainly reviewed the FPGA based designs published in the top FPGA conferences (FPGA, FCCM, FPL, FPT), EDA conferences (DAC, ASPDAC, DATE, ICCAD), architecture conferences (MICRO, HPCA, ISCA, ASPLOS) since 2015. Because of the diversity in the adopted techniques, target FPGA chips, and experiments, we need to tradeoff between the fairness of comparison and the number of designs we can use. In this paper, we pick the designs with: 1) whole system implementation; 2) experiments on real NN models with reported speed, power, and energy efficiency. 
+
+The designs used for comparison are listed in Table~\ref{tab:hardware_list}. For data format, the "INT A/B" means that activations are A-bit fixed point data and weights are B-bit fixed point data. We also investigate the resource utilization and draw advices to both accelerator designers and FPGA manufacturers.
 
 \input{table/hardware_list.tex}
 
