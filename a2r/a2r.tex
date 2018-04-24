@@ -2,9 +2,26 @@
 \usepackage{geometry}
 \usepackage{color}
 \geometry{left=3.0cm, right=3.0cm, top=2.0cm, bottom=2.0cm}
+
+\usepackage{booktabs} % For formal tables
+
+
+% \usepackage[ruled]{algorithm2e} % For algorithms
+
+\usepackage{cleveref}
+\usepackage{epsfig}
+\usepackage{float}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{bigstrut,multirow}
+\usepackage{threeparttable}
+\usepackage{subfigure}
+\usepackage{url}
+
 \newcommand{\rev}[1]{{{\color[rgb]{0,0,1}{#1}}}}
 \newcommand{\reviewer}[1]{\section*{Reviewer #1}}
-\newcommand{\answer}[1]{\noindent\textbf{Answer:} #1\\}
+\newcommand{\answer}[1]{\noindent\textbf{Answer:} #1}
 \newcommand{\comment}[1]{\noindent\textbf{#1}\\}
 
 
@@ -47,13 +64,13 @@ For the FPGA part, we introduce a typical structure of an accelerator and give a
 
 \answer{Thanks for your comments. We add the definition of the weights and activations of each NN layer in this part now. \\
 
-\rev{We refer the parameter of each layer as weights and the input/output of each layer as activations through this paper.}}
+\rev{We refer the parameter of each layer as weights and the input/output of each layer as activations through this paper.}}\\
 
 \comment{3. You should briefly discuss the difference between inference and training. You also need to discuss accuracy. These are important concepts. Your work focuses on using FPGAs for inference. You don't seem to consider accuracy in your overall comparisons.}
 
 \answer{Thanks to your comments. We now clarifies this point at the beginning of section 2.1. \\
 
-\rev{In this paper, we only focus on the inference of NN, which means using a trained model to predict or classify new data. The training process of NN is not discussed in this paper.}}
+\rev{In this paper, we only focus on the inference of NN, which means using a trained model to predict or classify new data. The training process of NN is not discussed in this paper.}}\\
 
 {\noindent\textbf{Section 3}}\\
 
@@ -63,25 +80,25 @@ For the FPGA part, we introduce a typical structure of an accelerator and give a
 
 We add the definitions of the terms in the equitions in this secction. \\
 
-\rev{Peak performance, measured in operations (multiplication or addition) per second, is achieved when all the computation units work every clock cycle. Utilization denotes the average ratio of working cycles of the computation units. The workload measures the number of operations in the target neural network.}}
+\rev{Peak performance, measured in operations (multiplication or addition) per second, is achieved when all the computation units work every clock cycle. Utilization denotes the average ratio of working cycles of the computation units. The workload measures the number of operations in the target neural network.}}\\
 
 \comment{5. You make the following statement, "Different network structures like the ones in [17, 22, 46] surely affect model accuracy, but is out of the discussion of this paper." Why? I don't think you have specifically defined the focus of this paper and you need to say more here why these papers are not relevant to this paper.}
 
 \answer{Thanks for your question, The discussion on this part is moved to the beginning of section 4. Changing the structure of NN models, from AlexNet to VGG and ResNet or MobileNet hardly affect the hardware design, because the basic opertions in the network remains. We want to focus on the techniques that specially benefits customized hardware. \\
 
-\rev{A larger NN model usually results in a higher model accuracy. This means it is possible to tradeoff between the model accuracy and the hardware speed or energy cost. Neural network researchers are designing more effcient network models from AlexNet [22] to ResNet [16], SqueezeNet [19] and MobileNet [18]. The main differences between these networks are the size of and the connections between each layer. The basic operations are the same and hardly affect the hardware design. For this reason, we will not focus on these techniques in this paper.}}
+\rev{A larger NN model usually results in a higher model accuracy. This means it is possible to tradeoff between the model accuracy and the hardware speed or energy cost. Neural network researchers are designing more effcient network models from AlexNet [22] to ResNet [16], SqueezeNet [19] and MobileNet [18]. The main differences between these networks are the size of and the connections between each layer. The basic operations are the same and hardly affect the hardware design. For this reason, we will not focus on these techniques in this paper.}}\\
 
 \comment{6. "model compression methods" has not been defined when you first use the term.}
 
 \answer{Thanks for your comment. We remove this phrase in section 3 and add a brief description in the beginning of section 4.\\
 
-\rev{Other methods try to achieve the tradeoff by compressing existing NN models. They try to reduce the number of weights or reduce the number of bits used for each activation or weight, which help reudce the computation and storage complexity. Corresponding hardware designs can benefit from these NN model compression methods. In this section, we investigate these hardware oriented network model compression methods.}}
+\rev{Other methods try to achieve the tradeoff by compressing existing NN models. They try to reduce the number of weights or reduce the number of bits used for each activation or weight, which help reudce the computation and storage complexity. Corresponding hardware designs can benefit from these NN model compression methods. In this section, we investigate these hardware oriented network model compression methods.}}\\
 
 {\noindent\textbf{Section 4}}\\
 
 \comment{7. It's not clear to me why this section includes "Software Design" in its title. These techniques are also relevant to any hardware design.}
 
-\answer{Thanks for your question. The title of this section is changed to hardware oriented model compression.}
+\answer{Thanks for your question. The title of this section is changed to hardware oriented model compression.}\\
 
 \comment{8. Section 4.1.3 - What are BW\_weight and BW\_neurons? I'm guessing BW means "bit width"? Explain how the comparison is being made. Where is the data coming from?}
 
@@ -89,23 +106,35 @@ We add the definitions of the terms in the equitions in this secction. \\
 
 \rev{Fig. 3.  Comparison between different quantization methods from [11,14,23,40,65,66]. The quantizationconfiguration is expressed as (weight bit-width)×(activation bit-width). The "(FT)" denotes that the networkis fine-tuned after a linear quantization.}\\
 
-\rev{We compare some typical quantization methods from~\cite{qiu2016going, guo2017angel, han2015deep, zhu2016trained, zhou2016dorefa, li2016ternary} in Figure~\ref{fig:quantization}. All the quantization results are tested on ImageNet data set and the absolute accuracy loss compared with corresponding baseline floating point models is recorded.}
-}
+\rev{We compare some typical quantization methods from [11,14,23,40,65,66] in Figure 3. All the quantization results are tested on ImageNet data set and the absolute accuracy loss compared with corresponding baseline floating point models is recorded.}}\\
 
 \comment{9. "... we see that..." How do we see this?}
 
 \answer{Thanks for your question. The result of linear quantization shows it clearly that 8-bit is a bound to keep less than 1\% accuracy loss. For non-linear quantization, current results are good with 2-bit weights. Further reduce the bit-width to 1-bit directly is equally a linear quantization. We have not seen more results on non-linear quantization with less bits for activations. So we do not give more comments on non-linear quantization here.\\
 
-\rev{For linear quantization, 8-bit is a clear bound to ensure negligible accuracy loss. With 6 or less bits, using fine-tune or even training each weight from the beginning, will cause obvious accuracy degradation. If we require that $1\%$ accuracy loss is within the acceptable range, linear quantization with at least $8\times 8$ configuration and the listed non-linear quantization are available. We will further discuss the performance gain of quantization in section~\ref{sec:hardware}.}
-}
+\rev{For linear quantization, 8-bit is a clear bound to ensure negligible accuracy loss. With 6 or less bits, using fine-tune or even training each weight from the beginning, will cause obvious accuracy degradation. If we require that $1\%$ accuracy loss is within the acceptable range, linear quantization with at least $8\times 8$ configuration and the listed non-linear quantization are available. We will further discuss the performance gain of quantization in section 5.}}\\
 
 \comment{10. Section 4.2 - What is the "lasso object function"?}
+
+\answer{Thanks for your question. The lasso object function refers to a L1 normalization to the weights during training to directly get a sparse model. The phrase "lasso object function" is wrong and we change it to "lasso method" now.\\}
 
 {\noindent\textbf{Section 5}}\\
 
 \comment{11. Figure 2 - Explain more what you are doing here. What is the point of this comparison? Why not do comparisons with and without DSPs? It looks like you have synthesized multipliers and adders in different ways to get their resource usage. You need to provide more details on how you did this. There's not enough information for me to determine whether the comparisons are fair. How did you describe the functional units? Did you just use A + B in Verilog with appropriate signal bit widths and types? For floating point, did you instantiate the cores from the library? What if you were to use an Altera part with the hardened FP in the DSP?}
 
+\answer{Thanks for your question. The experiment here is to show how the FPGA accelerator can benefit from quantization. We agree that simply using the logic resource consumption on FPGA is not enough. So we add more results on the multiply-and-add function with DSP units for both Xilinx and Altera FPGA. Detailed experiment setup is also included.
+
+\rev{The size of computation units of different bit-widths is compared in Table 1. Three kinds of implementations are tested: separate multiplier and adder with only logic resource on Xilinx FPGA, multiply-add function with DSP units on Xilinx FPGA, and multiply-add function with DSP units on Altera FPGA The resouce consumption is the synthesis result by Vivado 2018.1 targeting Xilinx XCKU060 FPGA and Quartus Prime 16.0 targeting Altera Arria 10 GX1150 FPGA. The pure logic modules and the floating point multiply and add modules are generated with IP core. The fixed point multiply and add modules are implemented with $A*B+C$ in verilog and automatically mapped to DSP by Vivado/Quartus.
+
+We first give an overview of the size of the computation units by logic-only implementations. By compressing the weights and activations from 32-bit floating point number to 8-bit fixed point number, the multiplier and the adder are scaled down to about 1/10 and 1/50 respectively. Using 4-bit or smaller operatiors can bring further advantage but also incur significant accuracy loss as introduced in section 4.1. 
+
+Recent FPGAs consist of large number of DSP units, each of which implements hard multiplier, pre-adder and accumulator core. The basic pattern of NN computation, multiplication and sum, also fits into this design. So we also test the multiply and add function implemented with DSP units. Because of the different DSP architectures, we test on both Xilinx and Altera platforms. Compared with the 32-bit floating point function, fixed point functions with narrow bit-width still shows advantage. But for Altera FPGA, this advantage is not obvious as where the DSP units natively supports floating point operations.}
+
+\input{../table/mac.tex}}
+
 \comment{12. In section 5.1.1, "Operations with 32-bit fixed point data consumes similar resource as 32-bit floating point operations." This does not make sense to me. Needs more explanation.}
+
+\answer{Thanks for your question. The number of multiplication and addition for a NN model is approximately the same, so a resonable estimation of the hardware is 1:1 multiplier and adder. Adding the resource for 1 multiplier and 1 adder, fixed32 operations is similar to fp32. We do not claim this point in the paper now. }
 
 {\noindent\textbf{Section 6}}\\
 
