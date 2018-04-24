@@ -2,7 +2,7 @@
 \usepackage{geometry}
 \usepackage{color}
 \geometry{left=3.0cm, right=3.0cm, top=2.0cm, bottom=2.0cm}
-\newcommand{\rev}[1]{{\color[rgb]{0,0,1}{#1}}}
+\newcommand{\rev}[1]{{{\color[rgb]{0,0,1}{#1}}}}
 \newcommand{\reviewer}[1]{\section*{Reviewer #1}}
 \newcommand{\answer}[1]{\noindent\textbf{Answer:} #1\\}
 \newcommand{\comment}[1]{\noindent\textbf{#1}\\}
@@ -16,7 +16,7 @@
 
 We sincerely thank all the reviewers and editors for providing us so many valuable suggestions to improve the quality of this paper. All the review comments are addressed and answered. Please see the answers below and the corresponding contents in the paper.
 
-{\rev{The newly added contents and the major revised contents are marked in blue in the paper.}}
+\rev{The newly added contents and the major revised contents are marked in blue in the paper.}
 
 The major improvements are listed as follows:
 
@@ -37,15 +37,39 @@ There are numerous spelling errors that could have easily been corrected with a 
 
 \comment{1. The paper begins with a very brief overview of neural networks and only tries to explain several types of layers. I believe you are just trying to show that there are several types of layers that need to be computed, but you also need to give some idea about the overall system, especially since that is important for later discussions. Figures would be helpful. Consider that many people new to the area would want to start with a survey paper. They need a clear explanation of the structure. As currently written, this section will make sense to someone that has worked in the area, but such a reader does not need this introduction. Someone new to area will not be able to understand the bigger picture and challenges.}
 
+\answer{Thanks for your advice. According to this comment and the following two comments, we have rewritten this section. Now, section 2.1 introduces NN and section 2.2 introduces FPGA based system. 
+
+For the NN part, we put the equations into the new Figure 1(b) to make them easier to be understood. We shorten the introduction to the layers like ReLU and pooling to make this section more focused on the things related to accelerator design. We also add some quantitive results of NN models to show that FC layers and CONV layers are the bottleneck that should be focused on.
+
+For the FPGA part, we introduce a typical structure of an accelerator and give a comparison between the requirement of NN models and avalable resource on an FPGA chip. }
+
 \comment{2. You have not defined what "weights" are when you first mention them.  "The weights of this layer..."}
 
+\answer{Thanks for your comments. We have added the definition of the weights and activations of each NN layer in this part now. 
+
+\rev{We refer the parameter of each layer as weights and the input/output of each layer as activations through this paper.}}
+
 \comment{3. You should briefly discuss the difference between inference and training. You also need to discuss accuracy. These are important concepts. Your work focuses on using FPGAs for inference. You don't seem to consider accuracy in your overall comparisons.}
+
+\answer{Thanks to your comments. We now clarifies this point at the beginning of section 2.1. 
+
+\rev{In this paper, we only focus on the inference of NN, which means using a trained model to predict or classify new data. The training process of NN is not discussed in this paper.}}
 
 {\noindent\textbf{Section 3}}\\
 
 \comment{4. You begin the section stating that accuracy, throughput, efficiency and flexibility are important. You need to more carefully define what you mean for each of those properties.  For example, you give an equation for throughput, but have not defined the terms in the equation.  How are each of the terms measured? There is no definition of flexibility.}
 
+\answer{Thanks for your comment. We think that we should focus on speed and energy efficiency first and consider the model accuracy as constraint to the design. A discussion on how to improve the accuracy of a NN model is not the task of this paper. For the flexibility, the standard is hard to define. We will discuss it separately from the aspect of design automation in section 7.
+
+We have added the definitions of the terms in the equitions in this secction. 
+
+\rev{Peak performance, measured in operations (multiplication or addition) per second, is achieved when all the computation units work every clock cycle. Utilization denotes the average ratio of working cycles of the computation units. The workload measures the number of operations in the target neural network.}}
+
 \comment{5. You make the following statement, "Different network structures like the ones in [17, 22, 46] surely affect model accuracy, but is out of the discussion of this paper." Why? I don't think you have specifically defined the focus of this paper and you need to say more here why these papers are not relevant to this paper.}
+
+\answer{Thanks for your question, The discussion on this part is moved to the beginning of section 4. Changing the structure of NN models, from AlexNet to VGG and ResNet or MobileNet hardly affect the hardware design, because the basic opertions in the network remains. We want to focus on the techniques that specially benefits customized hardware.
+
+\rev{A larger NN model usually results in a higher model accuracy. This means it is possible to tradeoff between the model accuracy and the hardware speed or energy cost. Neural network researchers are designing more effcient network models from AlexNet [22] to ResNet [16], SqueezeNet [19] and MobileNet [18]. The main differences between these networks are the size of and the connections between each layer. The basic operations are the same and hardly affect the hardware design. For this reason, we will not focus on these techniques in this paper.}}
 
 \comment{6. "model compression methods" has not been defined when you first use the term.}
 
