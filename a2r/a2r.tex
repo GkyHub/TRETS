@@ -47,7 +47,7 @@ I do not recommend publication of this paper until the issues described here hav
 
 There are numerous spelling errors that could have easily been corrected with a spell checker.  There are many grammatical errors that need to be addressed.\\
 
-\answer{}
+\answer{}\\
 
 
 {\noindent\textbf{Section 2}}\\
@@ -58,7 +58,7 @@ There are numerous spelling errors that could have easily been corrected with a 
 
 For the NN part, we put the equations into the new Figure 1(b) to make them easier to be understood. We shorten the introduction to the layers like ReLU and pooling to make this section more focused on the things related to accelerator design. We also add some quantitive results of NN models to show that FC layers and CONV layers are the bottleneck that should be focused on.
 
-For the FPGA part, we introduce a typical structure of an accelerator and give a comparison between the requirement of NN models and avalable resource on an FPGA chip. }
+For the FPGA part, we introduce a typical structure of an accelerator and give a comparison between the requirement of NN models and avalable resource on an FPGA chip. }\\
 
 \comment{2. You have not defined what "weights" are when you first mention them.  "The weights of this layer..."}
 
@@ -122,7 +122,7 @@ We add the definitions of the terms in the equitions in this secction. \\
 
 \comment{11. Figure 2 - Explain more what you are doing here. What is the point of this comparison? Why not do comparisons with and without DSPs? It looks like you have synthesized multipliers and adders in different ways to get their resource usage. You need to provide more details on how you did this. There's not enough information for me to determine whether the comparisons are fair. How did you describe the functional units? Did you just use A + B in Verilog with appropriate signal bit widths and types? For floating point, did you instantiate the cores from the library? What if you were to use an Altera part with the hardened FP in the DSP?}
 
-\answer{Thanks for your question. The experiment here is to show how the FPGA accelerator can benefit from quantization. We agree that simply using the logic resource consumption on FPGA is not enough. So we add more results on the multiply-and-add function with DSP units for both Xilinx and Altera FPGA. Detailed experiment setup is also included.
+\answer{Thanks for your questions. The experiment here is to show how the FPGA accelerator can benefit from quantization. We agree that simply using the logic resource consumption on FPGA is not enough. So we add more results on the multiply-and-add function with DSP units for both Xilinx and Altera FPGA. Detailed experiment setup is also included.
 
 \rev{The size of computation units of different bit-widths is compared in Table 1. Three kinds of implementations are tested: separate multiplier and adder with only logic resource on Xilinx FPGA, multiply-add function with DSP units on Xilinx FPGA, and multiply-add function with DSP units on Altera FPGA The resouce consumption is the synthesis result by Vivado 2018.1 targeting Xilinx XCKU060 FPGA and Quartus Prime 16.0 targeting Altera Arria 10 GX1150 FPGA. The pure logic modules and the floating point multiply and add modules are generated with IP core. The fixed point multiply and add modules are implemented with $A*B+C$ in verilog and automatically mapped to DSP by Vivado/Quartus.
 
@@ -134,7 +134,7 @@ Recent FPGAs consist of large number of DSP units, each of which implements hard
 
 \comment{12. In section 5.1.1, "Operations with 32-bit fixed point data consumes similar resource as 32-bit floating point operations." This does not make sense to me. Needs more explanation.}
 
-\answer{Thanks for your question. The number of multiplication and addition for a NN model is approximately the same, so a resonable estimation of the hardware is 1:1 multiplier and adder. Adding the resource for 1 multiplier and 1 adder, fixed32 operations is similar to fp32. We do not claim this point in the paper now. }
+\answer{Thanks for your question. The number of multiplication and addition for a NN model is approximately the same, so a resonable estimation of the hardware is 1:1 multiplier and adder. Adding the resource for 1 multiplier and 1 adder, fixed32 operations is similar to fp32. We do not claim this point in the paper now. }\\
 
 {\noindent\textbf{Section 6}}\\
 
@@ -142,11 +142,19 @@ Recent FPGAs consist of large number of DSP units, each of which implements hard
 
 \comment{14. Why did you pick those particular designs for Table 1?}
 
+\answer{Thanks for your question. We mainly review the published work in proceedings of the conference in FPGA, EDA and architecture from 2015. Among them, we select those with a whole system design and evaluation on real NN models with speed and power reported, so that we can give a fair evaluation and a relatively complete overview of state-of-the-art designs.
+
+\rev{We mainly reviewed the FPGA based designs published in the top FPGA conferences (FPGA, FCCM, FPL, FPT), EDA conferences (DAC, ASPDAC, DATE, ICCAD), architecture conferences (MICRO, HPCA, ISCA, ASPLOS) since 2015. Because of the diversity in the adopted techniques, target FPGA chips, and experiments, we need to tradeoff between the fairness of comparison and the number of designs we can use. In this paper, we pick the designs with: 1) whole system implementation; 2) experiments on real NN models with reported speed, power, and energy efficiency.} }\\
+
 \comment{15. In the text and Table 1 you refer to the various designs by their reference number, but then in Fig. 6 you use author names. This makes it very hard to figure out what the text is referring to in the graph. A similar issue is a statement like, "1-2 bit based designs show...".  Which points are those on the figure?}
+
+\answer{Thanks for your comment. Now we use the reference number as the uniform format to refer to different designs in section 6.} \\
 
 \comment{16. Fig. 6: Y label should be GOP/s, not GOP.}
 
-\comment{17. Section 6.0.4 - estimate of achievable performance of an ideal design.  Needs more discussion. Why is this a valid estimate? Why are we not anywhere close to this?}
+\answer{Thanks to your comment. We have corrected it.}\\
+
+\comment{17. Section 6.0.4 - estimate of achievable performance of an ideal design. Needs more discussion. Why is this a valid estimate? Why are we not anywhere close to this?}
 
 \reviewer{2}
 
@@ -154,11 +162,23 @@ This paper is well written and presents the great effort of the authors with sur
 
 \comment{1.	The last paragraph of Section 1, Section 3 is missing in the paper structure introduction.}
 
+\answer{Thanks for your comments. We add the description for section 3 in this version.}\\
+
 \comment{2. Section 4.1.3, for the comparison of linear and non-linear quantization methods, I suggest either more examples should be collected for non-linear quantization method or the explanation of the observation need to be revised, e.g. the bit-width of neurons are bounded with 32, why?}
+
+\answer{Thanks for your question. We agree that the conclusion here is not correct. To the best of our knowledge, no work applies quantization on activations with the weights already non-linear quantized. On the other hand, few FPGA based hardware design targets at non-linear weight quantization. So we do not claim this point in the paper now.}\\
 
 \comment{3.	Section 5.1.1 paragraph 4, for the declaration "All the IPs are .... actual hardware cost". If the IPs are required to avoid using DSPs, this comparison is only providing an ideal hardware cost in terms of logic resources. This need to be modified.}
 
+\answer{Thanks for your comments. The pure logic result is used to show the scale differece between different computation units. We add the synthesis result with DSP in this version.} \\
+
 \comment{4.	Section 7.1, DnnWeaver should be either a mixed method or instruction based.}
+
+\answer{Thanks for your comment. The phrases "HDL model based method" and "instruction based method" may have caused confusion. We do the classification by judging whether the hardware changes with the target network. With our understanding of DnnWeaver[43], it is a HDL model based method. Even though DnnWeaver designs an instruction set, "The compiler statically translates these instructions to microcodes and state machines". According to the flow graph of DnnWeaver, i.e. Figure 3 in [43], the instructions are used to generate the hardware. So we classify DnnWeaver as HDL model based method here. 
+
+To address this issue, we refer to the two kinds of methods as "hardware design automation" and "software design automation" respectively in this version. We also add a more detailed description of our classification criteria at the beginning of section 7.
+
+\rev{In certain application senarios, various NN models are to be supported with the FPGA accelerator. Whether the accelerator can response to the change in network model promptly and keeps high performance becomes a key feature. To address this problem, various researches have been carried out to automatically map a NN model to FPGA. Mainly two kinds of methods are used: hardware design automation and software design automation. Hardware design automation generates different hardware designs according to different NN models. Software design automation keeps a same accelerator and generates different inputs to the accelerator.}}\\
 
 \comment{Several minor typos:
 1. Section 4.4, paragraph 2, "The left weights are then fined-tuned are...." should be "The left weights are then fined-tuned with".
@@ -172,13 +192,54 @@ This paper presents a survey of FPGA-based neural network accelerators. The surv
 
 \comment{1.	The design methodology considers model accuracy, throughput, energy-efficiency but does not consider latency as an important optimization function (specially in non-batched mode).}
 
+\answer{Thanks for the comment. Latency is certainly an important optimization target. We add corresponding description in section 3. But we will not discuss this point in detail because of the following reasons:
+\begin{itemize}
+    \item Most of the NN accelerators does not process inputs concurrently.
+    \item The realization of concurrent process is simple because the computation graph of a certain NN model is fixed. Usually batch process[28] or layer pipeline[24] is used to concurrently process different inputs. The concurrency equals to the batch size or the number of pipeline stages.
+\end{itemize}
+
+We also give some explanation on this point in the paper:\\
+
+\rev{Most of the FPGA based NN accelerators compute different inputs one at a time, which means the latency of the system is the reciprocal of throughput. The concurrent process of different inputs is usually realized with batch[28]] or layer pipeline[24]. In these cases, the concurrency equals to the batch size or the number of pipeline stages. The latency of the accelerator can be described as equation~\ref{eqt:latency}. 
+
+\begin{equation}\label{eqt:latency}
+    latency = \frac{concurrency}{throughput}
+\end{equation}
+
+So in this paper, we focus more on optimizing the throughput. As different accelerators may be evaluated on different NN models, a common criterion of speed is the $actual\_performance$, which eliminates the effect of different workload to some extent.} }\\
+
 \comment{2.	Please explain Equation 3 on throughput. Why is utilization included in the equation?}
 
+\answer{Thanks for your question. The notations used here needs more explanation and we have added them. In equation 1, we express the actual performance as the product of peak performance and the utilization ratio of the computation units. This is because these two parts can be optimized with different techniques, which guides the discussion in the following sections. This part is modified to be clearer.\\
+
+\rev{\textbf{Speed}. The throughput of an NN accelerator can be expressed by equation~\ref{eqt:throughput}. \rev{Peak performance, measured in operations (multiplication or addition) per second, is achieved when all the computation units work every clock cycle. Utilization denotes the average ratio of working cycles of the computation units. The workload measures the number of operations in the target neural network.} With a certain FPGA chip, the on-chip resource is limited. We can increase the peak performance by reducing the size of each computation unit and increasing the working frequency. Reducing the size of computation units can be achieved by simplifying the basic operations in neural network model, which may hurt the model accuracy and requires hardware-software co-design. Increasing working frequency, on the other hand is pure hardware design work. A high utilization ratio is kept by reasonable parallelism implementation and efficient memory system. Most of this part is affected by hardware design. But optimization on NN models can also reduce the storage requirment of a neural network model and benefits the memory system.
+
+\begin{equation}\label{eqt:throughput}
+    throughput = \frac{actual\_performance}{workload} = \frac{peak\_performance \times utilization}{workload}
+\end{equation}}}
+
 \comment{3.	Energy-total in Equation 4 is not exactly energy efficiency. It is simply total energy. I would have liked to see performance per watt as a metric instead.}
+
+\answer{Thanks for your comment. We try to improve this part by showing the measurement at the very beginning and give another equation to explain the relation between energy efficiency and the energy cost to compute each input
+
+\rev{\textbf{Energy Efficiency}. Energy efficiency is the actual performance within a certain power cost, i.e. the average number of operations can be executed within certain energy budget. This is usually measured in (OP/s/W) or (OP/J). Given a certain network model, the workload is fixed. Increasing the energy efficiency of a neural network accelerator means to reduce the total energy cost, $E_{total}$ to process each input as shown in equation~\ref{eqt:efficiency}. This energy cost comes from 2 parts: computation and memory access, which is shown in equation~\ref{eqt:energy}. 
+
+\begin{equation}\label{eqt:efficiency}
+    energy\_efficiency = \frac{E_{total}}{workload}
+\end{equation}
+    
+\begin{equation}\label{eqt:energy}
+    E_{total} \approx N_{op}\times E_{op} + N_{SRAM\_access}\times E_{SRAM\_access} + N_{DRAM\_access}\times E_{DRAM\_access} + E_{static}
+\end{equation}
+}}
 
 \comment{4.	The hardware design section can benefit from a high-level classification of the architectures used in FPGA implementation and their summary: for example systolic array, daisy-chain like Intel-DLA architecture etc. Currently the focus is on simple low-level optimizations.}
 
 \comment{5.	The description of Figure 3 should be improved. I read this part many times and still could not understand what Figure 3(a) and 3(b) are representing.}
+
+\answer{Thanks for your comment. We remove the figure and use a simpler example of a single loop to explain the concept of loop unrolling and hardware underutilization. The explanation is shown as below:\\
+
+\rev{To parallelize the execution of the loops, we unroll the loops and parallelize the process of a certain number of iterations on hardware. The number of the parallelized iteraions on hardware is called the unroll parameter. Inappropriate unroll parameter selection may lead to serious hardware underutilization. Take a single loop as an example. Suppose the trip count of the loop is $M$ and the parallelism is $m$. The utilization ratio of the hardware is limited by $m/M\lceil M/m\rceil$. If $M$ is not divisible by $m$, then the utilization ratio is less than 1. Furthermore, in the case of NN process, the total utilization ratio will be the product of the utilization ratio along each of the loops.}}\\
 
 \comment{6.	The approaches to efficiently utilize on-chip memory is missing from the survey, even though it is an important consideration in most designs.}
 

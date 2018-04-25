@@ -8,19 +8,24 @@ Before going into the details of the techniques used for neural network accelera
     throughput = \frac{actual\_performance}{workload} = \frac{peak\_performance \times utilization}{workload}
 \end{equation}
 
-\rev{Most of the FPGA based NN accelerators computes different inputs sequentially, which means the latency of the system is the reciprocal of throughput. One can easily scale-up an accelerator design by processing a batch of inputs together or in a pipelined manner. In this way, the latency of the accelerator can be described as equation~\ref{eqt:latency}.
+\rev{Most of the FPGA based NN accelerators compute different inputs one at a time, which means the latency of the system is the reciprocal of throughput. The concurrent process of different inputs is usually realized with batch~\cite{lu2017evaluating} or layer pipeline~\cite{li2016high}. In these cases, the concurrency equals to the batch size or the number of pipeline stages. The latency of the accelerator can be described as equation~\ref{eqt:latency}. 
 
 \begin{equation}\label{eqt:latency}
-    latency = \frac{batch}{throughput}
+    latency = \frac{concurrency}{throughput}
 \end{equation}
 
-As different accelerators may be evaluated on different NN models, a common criterion is $actual\_performance$. The effect of batch is discussed separately.}
+So in this paper, we focus more on optimizing the throughput. As different accelerators may be evaluated on different NN models, a common criterion of speed is the $actual\_performance$, which eliminates the effect of different workload to some extent.}
 
-\textbf{Energy Efficiency}. Energy efficiency is the actual performance within a certain power cost, i.e. the average number of operations can be executed within certain energy budget. Given a certain network model, increasing the energy efficiency of a neural network accelerator means to reduce the total energy cost to process each input. This energy cost comes from 2 parts: computation and memory access, which is shown in equation~\ref{eqt:energy}. 
+\rev{\textbf{Energy Efficiency}. Energy efficiency is the actual performance within a certain power cost, i.e. the average number of operations can be executed within certain energy budget. This is usually measured in (OP/s/W) or (OP/J). Given a certain network model, the workload is fixed. Increasing the energy efficiency of a neural network accelerator means to reduce the total energy cost, $E_{total}$ to process each input as shown in equation~\ref{eqt:efficiency}. This energy cost comes from 2 parts: computation and memory access, which is shown in equation~\ref{eqt:energy}. 
 
-\rev{\begin{equation}\label{eqt:energy}
+\begin{equation}\label{eqt:efficiency}
+    energy\_efficiency = \frac{E_{total}}{workload}
+\end{equation}
+    
+\begin{equation}\label{eqt:energy}
     E_{total} \approx N_{op}\times E_{op} + N_{SRAM\_access}\times E_{SRAM\_access} + N_{DRAM\_access}\times E_{DRAM\_access} + E_{static}
-\end{equation}}
+\end{equation}
+}
 
 The first item in equation~\ref{eqt:energy} is the dynamic energy cost for computation. $N_{op}$ denotes the number of operations processed. $E_{op}$ denotes the average energy cost of each operation. Given a certain network and target FPGA platform, both $N_{op}$ and $E_{op}$ are fixed. For this part, researchers have been focusing on optimizing the NN models by quantization (narrowing the bit-width used for computation) to reduce $E_{op}$ or sparsification (setting more weights to zeros) to skip the multiplications with these zeros to reduce $N_{op}$.
 
