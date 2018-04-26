@@ -249,8 +249,16 @@ So in this paper, we focus more on optimizing the throughput. As different accel
 
 \comment{4.	The hardware design section can benefit from a high-level classification of the architectures used in FPGA implementation and their summary: for example systolic array, daisy-chain like Intel-DLA architecture etc. Currently the focus is on simple low-level optimizations.}
 
-\answer{
-    
+\answer{Thanks for your suggestion. With our understanding of systolic array, the main purpose is to transfer data between adjacent PEs to avoid the large fan-out in broadcasting the data to the PEs. This is also claimed in [55]. The daisy-chain archictecture in [3] works similarly. For this reason, we put this technique in section 5.1.3. 
+
+On the other hand, using systolic array requires certain data reuse between adjacent cycles to cover the warming up latency of the systolic pipeline. For this reason, using systolic array brings limitation to the loop execution order and should be a higher level technique. In this paper, we classify the hardware design techniques following a inside to outside mannar into three aspects:
+\begin{itemize}
+    \item Computation unit level, which only involves the implementation of the basic computation units.
+    \item Loop unrolling level, which involves how the data are fetched from the on-chip buffer and how the workload is parallelized.
+    \item System level, which involves the data transfer between on-chip buffer and off-chip DRAM, resolving the bandwidth limitation and increasing hardware utilization ratio.
+\end{itemize}
+
+So we think that the systolic array design should be a loop unrolling level technique and have reorganized corresponding sections.
 }
 
 \comment{5.	The description of Figure 3 should be improved. I read this part many times and still could not understand what Figure 3(a) and 3(b) are representing.}
