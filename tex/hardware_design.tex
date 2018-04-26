@@ -128,11 +128,11 @@ The above solutions are only for a single layer. But there is hardly a one-size-
 
 Most of the current designs follow one of the above methods for loop unrolling. A special kind of design is for sparse neural network. Han, et al.~\cite{han2017ese} propose the ESE architecture for sparse LSTM network acceleration. Unlike processing a dense network, all the computation units will not work synchronously. This causes difficulty in sharing data between different computation units. ESE implements only the output channel (the output neurons of the FC layers in LSTM) loop unrolling within a layer to simplify hardware design and parallelize batch process.
 
-\subsubsection{Data Transfer and On-chip Memory Design}
+\rev{\subsubsection{Data Transfer and On-chip Memory Design}
 
 Besides the high parallelism, the on-chip memory system should efficiently offer the necessary data to each computation units every cycle. To implement high parallelism, neural network accelerators usually reuse data among a large number of computation units in. Simply broadcasting data to different computation units leads to large fan-out and high routing cost and thus reduce the working frequency. Wei, et al.~\cite{wei2017automated} use the systolic array structure in their design. The shared data are transferred from one computation unit to the next in a chain mode. So the data is not broadcasted and only local connections between different computation units are needed. The drawback is the increase in latency. The loop execution order is scheduled accordingly to cover the latency. Similar designs are adopted in~\cite{aydonat2017opencl, ma2017optimizing}. 
 
-For software implementation on GPU, the im2col function is commonly used to map 2D convolution as a matrix vector multiplication. This method incurs large data redundancy and can hardly be applied to the limited on-chip memory of FPGAs. Qiu, et al.~\cite{qiu2016going} uses the line buffer design to achieve the $3\times 3$ sliding window function for 2-d convolution with only 2 lines of duplicated pixels. 
+For software implementation on GPU, the im2col function is commonly used to map 2D convolution as a matrix vector multiplication. This method incurs large data redundancy and can hardly be applied to the limited on-chip memory of FPGAs. Qiu, et al.~\cite{qiu2016going} uses the line buffer design to achieve the $3\times 3$ sliding window function for 2-d convolution with only 2 lines of duplicated pixels. }
 
 
 \subsection{System Design}\label{sec:hardware:sys}

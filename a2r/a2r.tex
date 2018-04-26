@@ -37,6 +37,14 @@ We sincerely thank all the reviewers and editors for providing us so many valuab
 
 The major improvements are listed as follows:
 
+\begin{itemize}
+    \item We rewrite section 2 to make this paper easier to give an overview of the whole problem. We simplify the introduction to NN to focus on what the NN accelerator designs are focused on. We also add a subsection for FPGA to show the challenge in accelerator design.
+    \item In section 3, we add more details to the explanation of the design targets, speed and energy efficiency. For the speed part, we add the discussion on latency.
+    \item In section 4, we add clarification on what NN model optimization techniques that should be discussed in this paper. That is, the techniques that can benefit from customized hardware.
+    \item We improve section 5.1.1 with more discussion on using the DSP units of FPGA.
+    \item We add more discussions to the estimation of an ideal NN accelerator and what is to be solved in future work in section 6.
+\end{itemize}
+
 \reviewer{1}
 
 The goal of this paper is to provide a survey of neural networks built using FPGAs. The networks are categorized according to several approaches and then some comparison is attempted.
@@ -234,7 +242,7 @@ So in this paper, we focus more on optimizing the throughput. As different accel
 
 \comment{3.	Energy-total in Equation 4 is not exactly energy efficiency. It is simply total energy. I would have liked to see performance per watt as a metric instead.}
 
-\answer{Thanks for your comment. We try to improve this part by showing the measurement at the very beginning and give another equation to explain the relation between energy efficiency and the energy cost to compute each input
+\answer{Thanks for your comment. We try to improve this part by showing the measurement at the very beginning and give another equation to explain the relation between energy efficiency and the energy cost to compute each input.\\
 
 \rev{\textbf{Energy Efficiency}. Energy efficiency is the actual performance within a certain power cost, i.e. the average number of operations can be executed within certain energy budget. This is usually measured in (OP/s/W) or (OP/J). Given a certain network model, the workload is fixed. Increasing the energy efficiency of a neural network accelerator means to reduce the total energy cost, $E_{total}$ to process each input as shown in equation~\ref{eqt:efficiency}. This energy cost comes from 2 parts: computation and memory access, which is shown in equation~\ref{eqt:energy}. 
 
@@ -268,6 +276,8 @@ So we think that the systolic array design should be a loop unrolling level tech
 \rev{To parallelize the execution of the loops, we unroll the loops and parallelize the process of a certain number of iterations on hardware. The number of the parallelized iteraions on hardware is called the unroll parameter. Inappropriate unroll parameter selection may lead to serious hardware underutilization. Take a single loop as an example. Suppose the trip count of the loop is $M$ and the parallelism is $m$. The utilization ratio of the hardware is limited by $m/M\lceil M/m\rceil$. If $M$ is not divisible by $m$, then the utilization ratio is less than 1. Furthermore, in the case of NN process, the total utilization ratio will be the product of the utilization ratio along each of the loops.}}\\
 
 \comment{6.	The approaches to efficiently utilize on-chip memory is missing from the survey, even though it is an important consideration in most designs.}
+
+\answer{Thanks to your comment. In this paper, we do not discuss the design of memory as a independent topic, but certain techiques are introduced in both section 5.2.2 and 5.3. In section 5.2.2 we introduce the techniques used in on-chip memory to offer data to the highly parallel hardware. In section 5.3, we analyze the loop tiling strategy to fully utilize on-chip memory and reduce off-chip data access.}
 
 \end{document}
 
