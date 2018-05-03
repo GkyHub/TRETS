@@ -55,7 +55,7 @@ I do not recommend publication of this paper until the issues described here hav
 
 There are numerous spelling errors that could have easily been corrected with a spell checker.  There are many grammatical errors that need to be addressed.\\
 
-\answer{}\\
+\answer{Thanks to your comments. We agree that this paper should be further improved. We have reviewed this paper according to all the precious comments you list below and make improvements. We have also gone through this paper to check spelling and grammatical errors.}\\
 
 
 {\noindent\textbf{Section 2}}\\
@@ -152,9 +152,7 @@ Recent FPGAs consist of large number of DSP units, each of which implements hard
 
 \rev{\subsubsection*{\textbf{Bit-width Reduction}} Among all the designs, 1-2 bit based designs[21][33][35] show outstanding speed and energy efficiency. This shows that extremely low bitwidth is a promising solution for high performance design. As introduced in section 4.1, linear quantized 1-2 bit network models suffer from great accuracy loss. Further developing related accelerator will be of little use. More efforts should be put on the models. Even trading speed with accuracy can be acceptable consider the current hardware performance.
 
-Besides the 1/2bit designs, the rest of the designs adopts 32-bit floating point data or linear quantiztion with 8 or more bits. According to the results in section 4.1, within 1\% accuracy loss can be achieved. So we think the comparison between these designs are fair in accuracy. INT16/8 and INT16 are commonly adopted. But the difference between these designs are not obvious. This is because the under-utilization of DSPs discussed in section 5.1.1. The advantage of INT16 over FP32 is obvious except for [63], where the hard-core floating point DSPs are utilized. To a certain extent, this shows the importance of fully utilizing the DSPs on-chip.}
-
-}
+Besides the 1/2bit designs, the rest of the designs adopts 32-bit floating point data or linear quantiztion with 8 or more bits. According to the results in section 4.1, within 1\% accuracy loss can be achieved. So we think the comparison between these designs are fair in accuracy. INT16/8 and INT16 are commonly adopted. But the difference between these designs are not obvious. This is because the under-utilization of DSPs discussed in section 5.1.1. The advantage of INT16 over FP32 is obvious except for [63], where the hard-core floating point DSPs are utilized. To a certain extent, this shows the importance of fully utilizing the DSPs on-chip.}}\\
 
 \comment{14. Why did you pick those particular designs for Table 1?}
 
@@ -174,9 +172,9 @@ Besides the 1/2bit designs, the rest of the designs adopts 32-bit floating point
 
 \answer{Thanks for your question. The estimation here is too ideal. We change the baseline to [28] and use the reported speed up in [13] to estimate the gain from sparsity. We also add a new paragraph discussing the possible challenges in achieving the goal. Existing techniques are mostly evaluated independently. Integration of the techniques may bring new problems. Detailed discussion is as below: \\
 
-\rev{Here we estimate the achievable speed of an ideal design. We use the 16-bit fixed point design in [28] as a baseline, which is the best 16-bit fixed point design with both the highest speed and energy efficiency. 8-bit linear quantization can be adopted according to the analysis in section 4.1, which achieves another $2\times$ energy efficiency and speedup by utilizing 1 DSP as 2 multipliers. Fast convolution and frequency optimization further improves the system by $4\times$ and $2\times$ respectively. Consider a sparse model which is similar to the one in [13] with 10\% non-zero values. We can estimate a similar $6\times$ improvement as [13]. In general about $12\times$ speedup and better energy efficiency can be achieved, which means 36TOP/s speed with about 25W. This shows that it is possible to achieve over 1 magnitude higher energy efficiency on FPGA over 32-bit floating point process on GPU.
+\rev{Here we estimate the achievable speed of an ideal design. We use the 16-bit fixed-point design in[28] as a baseline, which is the best 16-bit fixed-point design with both the highest speed and energy efficiency. 8-bit linear quantization can be adopted according to the analysis in section 4.1., which achieves another $2\times$ speedup and better energy efficiency by utilizing 1 DSP as 2 multipliers. The double frequency optimization further improves the system speed by $2\times$. Consider a sparse model which is similar to the one in[13] with 10\% non-zero values. We can estimate a similar $6\times$ improvement as[13]. In general about $24\times$ speedup and $12\times$ better energy efficiency can be achieved, which means 72TOP/s speed with about 50W. This shows that it is possible to achieve over $10\times$ higher energy efficiency on FPGA over 32-bit floating-point process on GPU.
 
-The left problem is: does all the techniques: reuse of DSP, sparsification, quantization, fast convolution work well together? Pruning a single element in a 2D convlution kernel is of no use for fast convolution because the 2D kernel is always processed as a whole. Directly pruning 2D kernels as a whole may help. But the reported accuracy of this method is relatively lower [31], which means the compression space is less. The irregular data access pattern for processing sparse network and the increase in parallelism also brings challenge to the design of memory system and scheduling strategy.}}\\
+The left problem is: does all the techniques: double MAC, sparsification, quantization, fast convolution, and the double frequency design work well together? Pruning a single element in a 2D convolution kernel is of no use for fast convolution because the 2D kernel is always processed as a whole. Directly pruning 2D kernels as a whole may help. But the reported accuracy of this method is lower[31] than a fine-grained pruning. The irregular data access pattern for processing sparse network and the increase in parallelism also brings challenges to the design of memory system and scheduling strategy.}}\\
 
 \reviewer{2}
 
@@ -207,6 +205,8 @@ To address this issue, we refer to the two kinds of methods as "hardware design 
 2. Section 5.1, paragraph 1, "then the this also A", seems a sentence is missing here.
 3. Section 5.2, paragraph 1, "and can further accelerated in frequency domain" should be "can be ...".
 4. The figures in this paper need further arrangement to make it more clear and beautiful.}
+
+\answer{Thanks to your comments. We have also gone through this paper to check spelling and grammatical errors.}\\
 
 \reviewer{3}
 
