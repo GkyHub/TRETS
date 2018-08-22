@@ -24,15 +24,15 @@ In recent years, FPGA is becoming a promising solution for algorithm acceleratio
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.8\columnwidth]{fig/fpga_preliminary.pdf}
-    \caption{(a) A typical structure of an FPGA based NN accelerator. (b) Comparison between NN model size and the storage on different FPGA chips.}
+    \includegraphics[width=0.9\columnwidth]{fig/fpga_preliminary.pdf}
+    \caption{\rev{(a) A typical structure of an FPGA based NN accelerator. (b) Gap between NN model size and the storage unit size on FPGAs. The bar chart compares the register and SRAM sizes on FPGA chips in different scales. The dotted line denotes the parameter sizes of different NN models.}}
     \label{fig:fpga_preliminary}
 \end{figure}
 
 For FPGA-based neural network accelerator, a typical architecture of the system is shown in Figure~\ref{fig:fpga_preliminary}(a). The system usually consists of a CPU host and an FPGA part. A pure FPGA chip usually works with a host PC/server through PCIe connections. SoC platforms (like the Xilinx Zynq Series) and Intel HARPv2~\cite{gupta2016accelerating} platform integrate the host and the FPGA in the same chip or package. Both the host and the FPGA can work with their own external memory and access each others' memory through the connection. Most of the designs implement NN accelerator on the FPGA part and control the 
 accelerator with the software on the host.
 
-Typical FPGA chips consist large on-chip storage units like registers and SRAMs, but still too small compared with NN models as shown in Figure~\ref{fig:fpga_preliminary}(b). Common models implement 100-1000MB parameters while the largest available FPGA chip implements <50MB on-chip SRAM. This gap requires that external memory like DDR SDRAM is needed. The bandwidth and power consumption of DDR limits the system performance.
+Typical FPGA chips consist large on-chip storage units like registers and \rev{SRAM(Static Random-Access Memory)}, but still too small compared with NN models as shown in Figure~\ref{fig:fpga_preliminary}(b). Common models implement 100-1000MB parameters while the largest available FPGA chip implements <50MB on-chip SRAM. This gap requires that external memory like DDR SDRAM is needed. The bandwidth and power consumption of DDR limits the system performance.
 
 The computation capacity of FPGA is relatively higher. Common FPGAs implements hundreds to thousands of DSP units, each of which can compute $18\times 27$ or $18\times 19$, achieving up to 10TFLOP/s (floating point operations per second) on the largest FPGAs. But for low-end FPGAs like Xilinx XC7Z020, this number is reduced to 20GFLOP/s, which is hard to support real-time video processing for applications on mobile platforms. 
 

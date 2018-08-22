@@ -8,7 +8,7 @@ Before going into the details of the techniques used for neural network accelera
     throughput = \frac{actual\_performance}{workload} = \frac{peak\_performance \times utilization}{workload}
 \end{equation}
 
-Most of the FPGA based NN accelerators compute different inputs one at a time, which means the latency of the system is the reciprocal of throughput. The concurrent process of different inputs is usually realized with batch~\cite{lu2017evaluating} or layer pipeline~\cite{li2016high}. In these cases, the concurrency equals to the batch size or the number of pipeline stages. The latency of the accelerator is expressed as equation~\ref{eqt:latency}. 
+\rev{Most of the FPGA based NN accelerators compute different inputs one by one. Some designs process different inputs in parallel. We refer to the number of concurrently processed inputs as concurrency. So the latency of the accelerator is expressed as equation~\ref{eqt:latency}.}
 
 \begin{equation}\label{eqt:latency}
     latency = \frac{concurrency}{throughput}
