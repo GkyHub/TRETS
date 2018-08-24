@@ -23,6 +23,7 @@
         "parallelized",
         "preprocess",
         "quantization",
+        "sparsification",
         "underutilization"
     ]
 }
