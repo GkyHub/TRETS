@@ -113,7 +113,23 @@ A survey paper needs to add value to its readers. The readership of a survey pap
 
 In particular, the survey only focuses on a narrow topic, namely CNN inference with primarily quantization and unrolling as the only optimizations. These optimizations are only at the kernel level; but the survey does not consider higher design architectural design issues such as how these kernels are put together or even CNN consisting of multiple layers and communications among layers are put together. The survey is completely missing the big picture, the system level design issues, memory bandwidth and storage issues, major architectural trends etc.\vspace{12pt}
 
+\answer{
+    Thanks for your comment. We agree that a survey paper should give insights of the whole area from a higher level. Following your suggestion, we added section 6 as a summary of all the techniques mentioned in section 4 and 5 and try to form a whole picture.
+
+    But we also need to point out the contents in section 5.3 aready covers some of the points you mentioned.
+
+    The roofline model shows how the bandwidth limits the system design. The techniques in section 5.3.2-5.3.4 all address this problem.
+
+    The main concern of connecting multiple layers is the data transfer from one layer to the next. Most of the existing designs process the network layer by layer so the connection is still memory and bandwidth issue. We also introduce the cross layer scheduling strategy in section 5.3.3, which involves a network level concern to the design.
+
+    To make it clear, we added sub titles to different parts of section 5.3.
+}
+
 \comment{1. As your survey focuses on CNN and inference, please state that directly in the tile and abstract.}
+
+\answer{
+    Thanks for your comment. We agree that we are focusing inference but not training. But we also cover accelerator designs for other networks like~\cite{han2017ese, guan2017fp}. Networks like LSTM with only fully connected layers can be treated as a special case for CNN besides the difference in network topology, where there is a loop for RNN. Most of the techniques introduced are suitable to both CNN and RNN or other state-of-the-art networks. We have added the 'inference' attribute to neural network accelerator in both the title and the abstract.
+}
 
 \comment{2. Section 3 remains as confusing as before. In Equation (1) what is actual\_performance? What's the metric? What is workload? What's the metric again. How is utilization measured? What is the unit of throughput?}
 
