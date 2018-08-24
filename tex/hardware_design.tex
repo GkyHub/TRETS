@@ -30,7 +30,7 @@ Fixed-point functions with 16-or-less-bit fixed-point data are well fit into 1 D
 
 \input{table/mac.tex}
 
-\subsubsection{Fast Convolution Unit}
+\subsubsection{Fast Convolution Unit}\label{sec:hardware:cu:fcu}
 For CONV layers, the convolution operations can be accelerated by alternative algorithms. Discrete Fourier Transformation (DFT) based fast convolution is widely adopted in digital signal processing. Zhang et al.~\cite{zhang2017frequency} propose a 2D DFT based hardware design for efficient CONV layer execution. For an $F\times F$ filter convolved with $K\times K$ filter, DFT converts the $(F-K+1)^2K^2$ multiplications in the space domain to $F^2$ complex multiplications in the frequency domain. For a CONV layer with $M$ input channel and $N$ output channel, $MN$ times of frequency domain multiplications and $(M+N)$ times DFT/IDFT are needed. The conversion of convolution kernels is once for all. So the domain conversion process is of low cost for CONV layers. This technique does not work for CONV layers with stride>1 or $1\times 1$ convolution. Ding et al.~\cite{ding2017c} suggest that a block-wise circular constraint can be applied to the weight matrix. In this way, the matrix-vector multiplication in FC layers are converted to a set of 1D convolutions and can be accelerated in the frequency domain. This method can also be applied to CONV layers by treating the $K\times K$ convolution kernels as $K\times K$ matrices and is not limited by $K$ or stride.
 
 Frequency domain methods require complex number multiplication. Another kind of fast convolution involves only real number multiplication~\cite{winograd1980arithmetic}. The convolution of a 2D feature map $F_{in}$ with a kernel $K$ using Winograd algorithm is expressed by equation~\ref{eqt:winograd}.
@@ -66,7 +66,7 @@ $G$, $B$ and $A$ are transformation matrix which only related to the sizes of ke
 \end{equation*}
 \rev{Multiplication with transformation matrices $A, B$ and $G$ induce only a small number of shift and addition because of the special matrix entries. In this case, the number of multiplication is reduced from 36 to 16.The most commonly used Winograd transformation is for $3\times 3$ convolutions in \cite{lu2017evaluating, xiao2017exploring}. 
 
-The theoretical performance gain from fast convolution depends on the convolution size. Limited by the on-chip resource and the consideration of flexibility, current designs are not choosing large convolution sizes. Existing designs are showing $4\times$ performance gain from fast convolution with FFT~\cite{zhang2017frequency} or Winograd~\cite{lu2017evaluating}. This should be a reasonable estimation of the gain from fast convolution.}
+The theoretical performance gain from fast convolution depends on the convolution size. Limited by the on-chip resource and the consideration of flexibility, current designs are not choosing large convolution sizes. Existing work point out that up to $4\times$ theoretical performance gain can be achieved by fast convolution with FFT~\cite{zhang2017frequency} or Winograd~\cite{lu2017evaluating} with reasonable kernel sizes.}
 
 \subsubsection{Frequency Optimization Methods}
 All the above techniques introduced targets at increasing the number of computation units within a certain FPGA. Increasing the working frequency of the computation units also improves the peak performance.
