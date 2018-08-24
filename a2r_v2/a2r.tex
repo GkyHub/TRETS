@@ -21,8 +21,12 @@
 
 \newcommand{\rev}[1]{{{\color[rgb]{0,0,1}{#1}}}}
 \newcommand{\reviewer}[1]{\section*{Reviewer #1}}
-\newcommand{\answer}[1]{\noindent\textbf{Answer:} #1}
-\newcommand{\comment}[1]{\noindent\textbf{#1}\\}
+\newcommand{\answer}[1]{
+    \fbox{
+        \parbox{0.9\textwidth}{\noindent\textbf{Answer:} #1}  
+    }\vspace{12pt}
+}
+\newcommand{\comment}[1]{\noindent\textbf{#1}\vspace{12pt}}
 
 
 \title{Answer to Reviewers}
@@ -41,18 +45,42 @@ We sincerely thank all the reviewers and editors for providing us so many valuab
 
 The paper is much improved. My main concern is that there are still numerous grammatical issues and still some typos in the paper. A significant amount of copyediting is required.
 
-I have a number of small issues remaining that should be addressed:\\
+I have a number of small issues remaining that should be addressed:\vspace{11pt}
 
 
 \comment{1. p 11.4: SRAM is not defined}
 
+\answer{
+    Thanks for your comment. We have addded the full name of SRAM in the paper in bracket.\vspace{6pt}
+    
+    \rev{Typical FPGA chips consist large on-chip storage units like registers and SRAM(Static Random-Access Memory), ...}
+}
+
 \comment{2. Figure 2b needs more explanation. Be more explicit on what the x and y axes represent and the dotted lines.}
+
+\answer{
+    Thanks for your comment. We use Figure 2b in this paper to show that the size of state-of-the-art NN models usually far exceeds the size of the storage units (register and SRAM) of FPGA chips. The bar chart denotes the available storage resource on FPGA chips. The dotted lines denote the size of NN models. We have added corresponding explantation in the caption of Figure 2b.
+}
 
 \comment{3. p 11.5: I don't think batch, batch size, layer pipeline have been defined. Remember that the reader is not necessarily fluent in all the terminology.}
 
+\answer{
+    Thanks for your comment. We agree that the readers may not be familiar to the concepts of batch, batch size, and layer pipeline. What we want to claim here is that processing different inputs in parallel can only improve parallelism, not latency. We think that it is not necessary to use these concepts here. So we simplified this paragraph with none of the above concepts. These concepts are introduced in section 5 when corresponding techniques are introduced.\vspace{6pt}
+
+    \rev{Most of the FPGA based NN accelerators compute different inputs one by one. Some designs process different inputs in parallel. We refer to the number of concurrently processed inputs as concurrency. So the latency of the accelerator is expressed as equation 2.}
+}
+
 \comment{4. p 11.10: sect 5.1.2 we estimate the theoretical benefit. sect 5.1.3 we estimate the theoretical hardware performance gain as 2x. How are you making these estimations? You have to say enough for the reader to make a judgement as to whether your estimations are valid.}
 
+\answer{
+    Thanks for your comment. For the estimations, we have added more explanations. The $4\times$ performance gain is estimated from existing designs. Larger transformation size may leads to higher 
+}
+
 \comment{5. p. 11.16:  Fig. 6 - I suggest putting FP in squares and GPU in triangles to make them stand out even better and make it visually easier to see where the different approaches lie. It is especially important for those that are color challenged!}
+
+\answer{
+    Thanks for your suggestion. We have changed the mark to make GPU results and 32-bit floating-point results more distinct to other results. 
+}
 
 \comment{6. "Overall, the improvement does not match the estimation ..."  What estimation?}
 
@@ -71,7 +99,6 @@ In particular, the survey only focuses on a narrow topic, namely CNN inference w
 \comment{3. As there has been some time between the submission and current time in a fast moving field, the authors need to include newer systems, for example, CHaiDNN etc.}
 
 \comment{4. There are numerous typos and grammatical mistakes even in this version.}
-
 
 \end{document}
 
