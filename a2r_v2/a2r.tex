@@ -114,7 +114,7 @@ I have a number of small issues remaining that should be addressed:\vspace{11pt}
 \answer{
     Thanks for your comment. We are trying to get some insight of the resource requirements of current accelerator designs which may help both accelerator designers and FPGA manufacturers. Figure 8 is referred to in the following paragraph:\vspace{6pt}
 
-    \textit{We also investigate the resource utilization of the designs in Table 2. Three kinds of resources (DSP, BRAM, and logic) are considered. We plot the designs in Figure 8 using two of the utilization ratio as x and y coordinate. We draw the diagonal line of each figure to show the designs' preference on hardware resource. The BRAM-DSP figure shows an obvious preference on DSP over BRAM. A similar preference appears on DSP over logic. This indicates that current FPGA designs are more likely computation bounded. FPGA manufacturers targeting neural network applications can adjust the resource allocation accordingly.}
+    \textit{We also investigate the resource utilization of the designs in Table 3. Three kinds of resources (DSP, BRAM, and logic) are considered. We plot the designs in Figure 8 using two of the utilization ratio as x and y coordinate. We draw the diagonal line of each figure to show the designs' preference on hardware resource. The BRAM-DSP figure shows an obvious preference on DSP over BRAM. A similar preference appears on DSP over logic. This indicates that current FPGA designs are more likely computation bounded. FPGA manufacturers targeting neural network applications can adjust the resource allocation accordingly.}
 }
 
 \reviewer{3}
@@ -124,7 +124,7 @@ A survey paper needs to add value to its readers. The readership of a survey pap
 In particular, the survey only focuses on a narrow topic, namely CNN inference with primarily quantization and unrolling as the only optimizations. These optimizations are only at the kernel level; but the survey does not consider higher design architectural design issues such as how these kernels are put together or even CNN consisting of multiple layers and communications among layers are put together. The survey is completely missing the big picture, the system level design issues, memory bandwidth and storage issues, major architectural trends etc.\vspace{12pt}
 
 \answer{
-    Thanks for your comment. We agree that a survey paper should give insights of the whole area from a higher level. Following your suggestion, we added section 6 as a summary of all the techniques mentioned in section 4 and 5 and try to form a whole picture.
+    Thanks for your comment. We agree that a survey paper should give insights of the whole area from a higher level. Following your suggestion, we added section 8 as a summary of all the techniques mentioned in section 4 and 5 and discuss the future of NN accelerator design.
 
     But we also need to point out the contents in section 5.3 aready covers some of the points you mentioned.
 
@@ -154,6 +154,10 @@ In particular, the survey only focuses on a narrow topic, namely CNN inference w
 }
 
 \comment{4. There are numerous typos and grammatical mistakes even in this version.}
+
+\answer{
+    Thanks to your comments. We have also gone through this paper again to check spelling and grammatical errors.
+}
 
 \bibliographystyle{plain}
 \bibliography{../ref}
