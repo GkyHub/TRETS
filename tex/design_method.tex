@@ -26,7 +26,7 @@ In this paper, we focus more on optimizing the throughput. As different accelera
 \end{equation}
     
 \begin{equation}\label{eqt:energy}
-    E_{total} \approx N_{op}\times E_{op} + N_{SRAM\_acc}\times E_{SRAM\_acc} + N_{DRAM\_acc}\times E_{DRAM\_acc} + E_{static}
+    E_{total} \approx W\times E_{op} + N_{SRAM\_acc}\times E_{SRAM\_acc} + N_{DRAM\_acc}\times E_{DRAM\_acc} + E_{static}
 \end{equation}
 
 The total energy cost mainly comes from 2 parts: computation and memory access, which is expressed in equation~\ref{eqt:energy}. The first item in equation~\ref{eqt:energy} is the dynamic energy cost for computation. $N_{op}$ denotes the number of operations processed. $E_{op}$ denotes the average energy cost of each operation. Given a certain network and target FPGA platform, both $N_{op}$ and $E_{op}$ are fixed. For this part, researchers have been focusing on optimizing the NN models by quantization (narrowing the bit-width used for computation) to reduce $E_{op}$ or sparsification (setting more weights to zeros) to skip the multiplications with these zeros to reduce $N_{op}$.
