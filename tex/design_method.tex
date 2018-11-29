@@ -2,24 +2,22 @@
 
 Before going into the details of the techniques used for neural network accelerators, we first give an overview of the design methodology. In general, the design target of a neural network inference accelerator includes the following two aspects: high speed (high throughput and low latency), and high energy efficiency. The symbols used in this section are listed in Table~\ref{tab:symbol}.
 
-\rev{
+
 \input{table/symbol.tex}
 
-\textbf{Speed}. The throughput of an NN accelerator can be expressed by equation~\ref{eqt:throughput}. The on-chip resource for a certain FPGA chip is limited. We can increase the peak performance by reducing the size of each computation unit and increasing the working frequency. Reducing the size of computation units can be achieved by simplifying the basic operations in a neural network model, which may hurt the model accuracy and requires hardware-software co-design. On the other hand, increasing working frequency is pure hardware design work. A high utilization ratio is ensured by reasonable parallelism implementation and efficient memory system. Most of this part is affected by hardware design. But optimization of NN models can also reduce the storage requirements of a neural network model and benefits the memory system.
+\textbf{Speed}. The throughput of an NN accelerator can be expressed by equation~\ref{eqt:throughput}. The on-chip resource for a certain FPGA chip is limited. We can increase the peak performance by: 1. increasing the number of computation units $P$ by reducing the size of each computation unit and 2. increasing the working frequency $f$. Reducing the size of computation units can be achieved by sacrificing the data precision, which may hurt the model accuracy and requires hardware-software co-design. On the other hand, increasing working frequency is pure hardware design work. Corresponding techniques on software models and hardware are introduced in section~\ref{sec:software} and \ref{sec:hardware} respectively. A high utilization ratio $\eta$ is ensured by reasonable parallelism implementation and efficient memory system. The property of the target model, i.e. the data access pattern or data-computation ratio also affect if the hardware can be fully utilized at run-time. But most of the previous work targeting higher utilization ratio focus on the hardware side.
 
 \begin{equation}\label{eqt:throughput}
-    IPS = \frac{OPS_{act}}{W} = \frac{OPS_{peak} \times \eta}{W}
+    IPS = \frac{OPS_{act}}{W} = \frac{OPS_{peak} \times \eta}{W} = \frac{fP\times\eta}{W}
 \end{equation}
 
-\rev{Most of the FPGA based NN accelerators compute different inputs one by one. Some designs process different inputs in parallel. So the latency of the accelerator is expressed as equation~\ref{eqt:latency}.}
+Most of the FPGA based NN accelerators compute different inputs one by one. Some designs process different inputs in parallel. So the latency of the accelerator is expressed as equation~\ref{eqt:latency}. Common concurrent design includes layer pipeline and batch processing. This is usually considered together with loop unrolling and will be introduced in section~\ref{sec:hardware:lu}. In this paper, we focus more on optimizing the throughput. As different accelerators may be evaluated on different NN models, a common criterion of speed is the $OPS_{act}$, which eliminates the effect of different network models to some extent.
 
 \begin{equation}\label{eqt:latency}
     L = \frac{C}{IPS}
 \end{equation}
 
-In this paper, we focus more on optimizing the throughput. As different accelerators may be evaluated on different NN models, a common criterion of speed is the $OPS_{act}$, which eliminates the effect of different network models to some extent.
-
-\textbf{Energy Efficiency}. Energy efficiency ($Eff$) is another critical criteria to computing systems. For neural network inference accelerators, energy efficiency is defined as equation~\ref{eqt:efficiency}. Like throughput, we count the number of operations rather than the number of inference to eliminates the difference of $W$. If the workload for the target network is fixed, increasing the energy efficiency of a neural network accelerator means to reduce the total energy cost, $E_{total}$ to process each input.
+\textbf{Energy Efficiency}. Energy efficiency ($Eff$) is another critical criteria to computing systems. For neural network inference accelerators, energy efficiency is defined as equation~\ref{eqt:efficiency}. Like throughput, we count the number of operations rather than the number of inference to eliminates the difference of workload $W$. If the workload for the target network is fixed, increasing the energy efficiency of a neural network accelerator means to reduce the total energy cost, $E_{total}$ to process each input. 
 
 \begin{equation}\label{eqt:efficiency}
     Eff = \frac{W}{E_{total}}
@@ -29,9 +27,9 @@ In this paper, we focus more on optimizing the throughput. As different accelera
     E_{total} \approx W\times E_{op} + N_{SRAM\_acc}\times E_{SRAM\_acc} + N_{DRAM\_acc}\times E_{DRAM\_acc} + E_{static}
 \end{equation}
 
-The total energy cost mainly comes from 2 parts: computation and memory access, which is expressed in equation~\ref{eqt:energy}. The first item in equation~\ref{eqt:energy} is the dynamic energy cost for computation. $N_{op}$ denotes the number of operations processed. $E_{op}$ denotes the average energy cost of each operation. Given a certain network and target FPGA platform, both $N_{op}$ and $E_{op}$ are fixed. For this part, researchers have been focusing on optimizing the NN models by quantization (narrowing the bit-width used for computation) to reduce $E_{op}$ or sparsification (setting more weights to zeros) to skip the multiplications with these zeros to reduce $N_{op}$.
+The total energy cost mainly comes from 2 parts: computation and memory access, which is expressed in equation~\ref{eqt:energy}. The first item in equation~\ref{eqt:energy} is the dynamic energy cost for computation. Given a certain network, the workload $W$ is fixed. Researchers have been focusing on optimizing the NN models by quantization (narrowing the bit-width used for computation) to reduce $E_{op}$ or sparsification (setting more weights to zeros) to skip the multiplications with these zeros to reduce $N_{op}$, which follows similar rules as for throughput optimization. 
 
-The second and third item in equation~\ref{eqt:energy} is the dynamic energy cost for memory access. As shown in section~\ref{sec:preliminary:fpga}, FPGA based NN accelerator usually works with an external DRAM. We separate the memory access energy into DRAM part and SRAM part. $N_{x_acc}$ can be reduced by quantization, sparsification, efficient on-chip memory system, and scheduling method. Thus these methods help reduce dynamic memory energy. $E_{x\_acc}$ can hardly be reduced given a certain FPGA platform.}
+The second and third item in equation~\ref{eqt:energy} is the dynamic energy cost for memory access. As shown in section~\ref{sec:preliminary:fpga}, FPGA based NN accelerator usually works with an external DRAM. We separate the memory access energy into DRAM part and SRAM part. $N_{x_acc}$ can be reduced by quantization, sparsification, efficient on-chip memory system, and scheduling method. Thus these methods help reduce dynamic memory energy. The unit energy $E_{x\_acc}$ can hardly be reduced given a certain FPGA platform.
 
 The fourth item $E_{static}$ denotes the static energy cost of the system. This energy cost can hardly be improved given the FPGA chip and the scale of the design.
 
