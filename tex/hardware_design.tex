@@ -1,6 +1,6 @@
 \section{Hardware Design: Efficient Architecture}\label{sec:hardware}
 
-In this section, we investigate the hardware level techniques used in state-of-the-art FPGA based neural network accelerator design to achieve high performance and high energy efficiency. We classify the techniques into three levels: computation unit level, loop unrolling level, and system level.
+In this section, we investigate the hardware level techniques used in state-of-the-art FPGA-based neural network accelerator design to achieve high performance and high energy efficiency. We classify the techniques into three levels: computation unit level, loop unrolling level, and system level.
 
 \subsection{Computation Unit Designs}\label{sec:hardware:cu}
 
@@ -74,7 +74,7 @@ All the above techniques introduced targets at increasing the number of computat
 Latest FPGAs support 700-900MHz DSP theoretical peak working frequency. But existing designs usually work at 100-300MHz~\cite{qiu2016going, guo2017angel, zhang2016caffeine, ma2017optimizing}. As claimed in \cite{wu2017high}, the working frequency is limited by the routing between on-chip SRAM and DSP units. The design in \cite{wu2017high} uses different working frequencies for DSP units and surrounding logic. Neighbor slices to each DSP unit are used as local RAMs to separate the clock domain. The prototype design in \cite{wu2017high} achieves the peak DSP working frequency at 741MHz and 891MHz on FPGA chips of different speed grades. \rev{Xilinx has also proposed the CHaiDNN-v2~\cite{chai_dnn} with this technique and achieves up to 700MHz DSP working frequency. Compared with existing designs for which the frequency is within 300MHz, this technique brings at least $2\times$ peak performance gain.}
 
 \subsection{Loop Unrolling Strategies}\label{sec:hardware:lu}
-CONV layers and FC layers contribute to most of the computations and storage requirement of a neural network as introduced in section~\ref{sec:preliminary}. We express the CONV layer function in Figure~\ref{fig:cnn_preliminary}(b) as nested loops in Algorithm~\ref{alg:conv}. To make the code clear to read, we merge the loops along $x$ and $y$ directions for feature maps and 2-D convolution kernels respectively. An FC layer can be expressed as a CONV layer with feature map and kernel both of size $1\times 1$. Besides the loops in Algorithm~\ref{alg:conv}, we also call the parallelism of the process of multiple inputs as a batch. This forms the batch loop.
+CONV layers and FC layers contribute to most of the computations and storage requirement of a neural network as introduced in section~\ref{sec:preliminary}. We express the CONV layer function in Figure~\ref{fig:cnn_preliminary}(b) as nested loops in Algorithm~\ref{alg:conv}. To make the code clear to read, we merge the loops along $x$ and $y$ directions for feature maps and 2-D convolution kernels respectively. An FC layer can be expressed as a CONV layer with feature map and kernel both of size $1\times 1$. Besides the loops in Algorithm~\ref{alg:conv}, we also call the parallelism of the process of multiple inputs as a batch. As we treat FC layers and CONV layers all as nested loops, the loop unrolling strategy can be applied both in CNN accelerators and RNN accelerators. But as the case for FC layers are rather simple, we tend to use CNN as examples in this section.
 
 \begin{algorithm}  
     \caption{Convolution Layer}
@@ -133,12 +133,12 @@ For software implementation on GPU, the im2col function is commonly used to map 
 
 \subsection{System Design}\label{sec:hardware:sys}
 
-A typical FPGA based neural network accelerator system is shown in Figure~\ref{fig:sys}. The logic part of the whole system is denoted by the blue boxes. The host CPU issues workload or commands to the FPGA logic part and monitors its working status. On the FPGA logic part, a controller is usually implemented to communicate with the host and generates control signals to all the other modules on FPGA. The controller can be an FSM or an instruction decoder. The on the fly logic part is implemented for certain designs if the data loaded from external memory needs preprocess. This module can be data arrangement module, data shifter~\cite{qiu2016going}, FFT module~\cite{zhang2017frequency}, etc. The computation units are as discussed in section~\ref{sec:hardware:cu} and section~\ref{sec:hardware:lu}. As introduced in section~\ref{sec:preliminary:fpga}, on-chip SRAM of an FPGA chip is too limited compared with the large NN models. So for common designs, a two-level memory hierarchy is used with DDR and on-chip memory. 
+A typical FPGA-based neural network accelerator system is shown in Figure~\ref{fig:sys}. The logic part of the whole system is denoted by the blue boxes. The host CPU issues workload or commands to the FPGA logic part and monitors its working status. On the FPGA logic part, a controller is usually implemented to communicate with the host and generates control signals to all the other modules on FPGA. The controller can be an FSM or an instruction decoder. The on the fly logic part is implemented for certain designs if the data loaded from external memory needs preprocess. This module can be data arrangement module, data shifter~\cite{qiu2016going}, FFT module~\cite{zhang2017frequency}, etc. The computation units are as discussed in section~\ref{sec:hardware:cu} and section~\ref{sec:hardware:lu}. As introduced in section~\ref{sec:preliminary:fpga}, on-chip SRAM of an FPGA chip is too limited compared with the large NN models. So for common designs, a two-level memory hierarchy is used with DDR and on-chip memory. 
 
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.8\columnwidth]{fig/sys.pdf}
-    \caption{Block graph of a typical FPGA based neural network accelerator system}
+    \caption{Block graph of a typical FPGA-based neural network accelerator system}
     \label{fig:sys}
 \end{figure}
 

@@ -7,7 +7,7 @@ Before discussing the system design for neural network acceleration, we first in
 \begin{figure}[ht]
     \centering
     \includegraphics[width=1.0\columnwidth]{fig/cnn_preliminary.pdf}
-    \caption{(a) Computation graph of a neural network model. (b) CONV and FC layers in NN model. (c) CONV and FC layers dominate the computation and parameter of an NN model.}
+    \caption{(a) Computation graph of a neural network model. (b) CONV and FC layers in NN model. (c) CONV and FC layers dominate the computation and parameter of a typical NN model: VGG11.}
     \label{fig:cnn_preliminary}
 \end{figure}
 
@@ -15,7 +15,7 @@ In this section, we introduce the basic functions in a neural network. In this p
 
 Convolution (CONV) layers and fully connected (FC) layers are two common types of layers in NN models. The functions of these two layers are shown in Figure~\ref{fig:cnn_preliminary}(b). CONV layers conduct 2D convolutions on a set of input feature maps $F_{in}$ and add the results to get output feature maps $F_{out}$. FC layers receive a feature vector as input and conduct matrix-vector multiplications.
 
-Besides CONV and FC layers, NN layers also have pooling, ReLU~\cite{krizhevsky2012imagenet}, concat~\cite{szegedy2015going}, element-wise~\cite{he2016deep} and other types of layers. But these layers contributes little to the computation and storage requirement of a neural network model. Figure~\ref{fig:cnn_preliminary}(c) shows the distribution of weights and operations in the VGG-11 model~\cite{simonyan2014very}. CONV and FC layers together contribute more than 99\% of the network's weights and operations. So most of the neural network acceleration systems focus on these two types of layers.
+Besides CONV and FC layers, NN layers also have pooling, ReLU~\cite{krizhevsky2012imagenet}, concat~\cite{szegedy2015going}, element-wise~\cite{he2016deep} and other types of layers. But these layers contributes little to the computation and storage requirement of a neural network model. Figure~\ref{fig:cnn_preliminary}(c) shows the distribution of weights and operations in the VGG-11 model~\cite{simonyan2014very}. In this model, CONV and FC layers together contribute more than 99\% of the network's weights and operations, which is similar to most of the CNN models. Compared with CNN, RNN models~\cite{hannun2014deep, amodei2016deep} usually have no CONV layers and only FC layers contributes to most of the computation and storage. So most of the neural network acceleration systems focus on these two types of layers.
 
 
 \subsection{FPGA-based Accelerator}\label{sec:preliminary:fpga}
@@ -25,7 +25,7 @@ In recent years, FPGA is becoming a promising solution for algorithm acceleratio
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\columnwidth]{fig/fpga_preliminary.pdf}
-    \caption{\rev{(a) A typical structure of an FPGA based NN accelerator. (b) Gap between NN model size and the storage unit size on FPGAs. The bar chart compares the register and SRAM sizes on FPGA chips in different scales. The dotted line denotes the parameter sizes of different NN models.}}
+    \caption{\rev{(a) A typical structure of an FPGA-based NN accelerator. (b) Gap between NN model size and the storage unit size on FPGAs. The bar chart compares the register and SRAM sizes on FPGA chips in different scales. The dotted line denotes the parameter sizes of different NN models.}}
     \label{fig:fpga_preliminary}
 \end{figure}
 

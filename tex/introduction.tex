@@ -8,18 +8,18 @@ Therefore, choosing a proper computation platform for neural-network-based appli
 
 Besides CPUs and GPUs, FPGAs are becoming a platform candidate to achieve energy efficient neural network processing. With a neural network oriented hardware design, FPGAs can implement high parallelism and make use of the properties of neural network computation to remove additional logic. Algorithm researches also show that an NN model can be simplified in a hardware-friendly way while not hurting the model accuracy. Therefore FPGAs are possible to achieve higher energy efficiency compared with CPU and GPU. 
 
-FPGA based accelerator designs are faced with two challenges in performance and flexibility:
+FPGA-based accelerator designs are faced with two challenges in performance and flexibility:
 \begin{itemize}
     \item Current FPGAs usually support working frequency at 100-300MHz, which is much less than CPU and GPU. The FPGA's logic overhead for reconfigurability also reduces the overall system performance. A straightforward design on FPGA is hard to achieve high performance and high energy efficiency.
     \item Implementation of neural networks on FPGAs is much harder than that on CPUs or GPUs. Development framework like Caffe and Tensorflow for CPU and GPU is absent for FPGA.
 \end{itemize}
  
-Many designs addressing the above two problems have been carried out to implement energy efficient and flexible FPGA based neural network accelerators. In this paper, we summarize the techniques proposed in these work from the following aspects:
+Many designs addressing the above two problems have been carried out to implement energy efficient and flexible FPGA-based neural network accelerators. In this paper, we summarize the techniques proposed in these work from the following aspects:
 \begin{itemize}
-    \item We first give a simple model of FPGA based neural network accelerator performance to analyze the methodology in energy efficient design.
+    \item We first give a simple model of FPGA-based neural network accelerator performance to analyze the methodology in energy efficient design.
     \item We investigate current technologies for high performance and energy efficient neural network accelerator designs. We introduce the techniques in both software and hardware level and estimate the effect of these techniques.
-    \item We compare state-of-the-art neural network accelerator designs to evaluate the techniques introduced and estimate the achievable performance of FPGA based accelerator design, which is at least $10\times$ better energy efficient than current GPUs.
-    \item We investigate state-of-the-art automatic design methods of FPGA based neural network accelerators. 
+    \item We compare state-of-the-art neural network accelerator designs to evaluate the techniques introduced and estimate the achievable performance of FPGA-based accelerator design, which is at least $10\times$ better energy efficient than current GPUs.
+    \item We investigate state-of-the-art automatic design methods of FPGA-based neural network accelerators. 
 \end{itemize}
 
-The rest part of this paper is organized as follows: Section~\ref{sec:preliminary} introduces the basic operations of neural networks and the background of FPGA based NN accelerator. In section~\ref{sec:design_method}, we analyze the design target of NN accelerators and corresponding methods. Section~\ref{sec:software} and section~\ref{sec:hardware} review the techniques on neural network accelerator in NN model and hardware respectively. Section~\ref{sec:evaluation} compares existing designs and evaluate the techniques. Section~\ref{sec:flexibility} introduces the methods for a flexible accelerator design. Section~\ref{sec:conclusion} concludes this paper.
+The rest part of this paper is organized as follows: Section~\ref{sec:preliminary} introduces the basic operations of neural networks and the background of FPGA-based NN accelerator. In section~\ref{sec:design_method}, we analyze the design target of NN accelerators and corresponding methods. Section~\ref{sec:software} and section~\ref{sec:hardware} review the techniques on neural network accelerator in NN model and hardware respectively. Section~\ref{sec:evaluation} compares existing designs and evaluate the techniques. Section~\ref{sec:flexibility} introduces the methods for a flexible accelerator design. Section~\ref{sec:conclusion} concludes this paper.
