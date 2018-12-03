@@ -25,7 +25,7 @@ In recent years, FPGA is becoming a promising solution for algorithm acceleratio
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\columnwidth]{fig/fpga_preliminary.pdf}
-    \caption{\rev{(a) A typical structure of an FPGA-based NN accelerator. (b) Gap between NN model size and the storage unit size on FPGAs. The bar chart compares the register and SRAM sizes on FPGA chips in different scales. The dotted line denotes the parameter sizes of different NN models.}}
+    \caption{\rev{(a) A typical structure of an FPGA-based NN accelerator. (b) Gap between NN model size and the storage unit size on FPGAs. The bar chart compares the register and SRAM sizes on FPGA chips in different scales. The dotted line denotes the parameter sizes of different NN models with 32-bit floating point parameters.}}
     \label{fig:fpga_preliminary}
 \end{figure}
 
@@ -34,6 +34,6 @@ accelerator with the software on the host.
 
 Typical FPGA chips consist large on-chip storage units like registers and \rev{SRAM(Static Random-Access Memory)}, but still too small compared with NN models as shown in Figure~\ref{fig:fpga_preliminary}(b). Common models implement 100-1000MB parameters while the largest available FPGA chip implements <50MB on-chip SRAM. This gap requires that external memory like DDR SDRAM is needed. The bandwidth and power consumption of DDR limits the system performance.
 
-The computation capacity of FPGA is relatively higher. Common FPGAs implements hundreds to thousands of DSP units, each of which can compute $18\times 27$ or $18\times 19$, achieving up to 10TFLOP/s (floating point operations per second) on the largest FPGAs. But for low-end FPGAs like Xilinx XC7Z020, this number is reduced to 20GFLOP/s, which is hard to support real-time video processing for applications on mobile platforms. 
+The computation capacity of FPGA is relatively higher. Common FPGAs implement hundreds to thousands of DSP units, each of which can compute $18\times 27$ or $18\times 19$, achieving up to 10TFLOP/s (floating point operations per second) on the largest FPGAs. But for low-end FPGAs like Xilinx XC7Z020, this number is reduced to 20GFLOP/s, which is hard to support real-time video processing for applications on mobile platforms. 
 
 Even faced with the above challenges, researchers have proposed a series of optimization methods from algorithm to architecture to design high performance NN accelerators on FPGA, which will be discussed in the following sections of this paper.
