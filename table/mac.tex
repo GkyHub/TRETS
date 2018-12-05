@@ -2,17 +2,18 @@
 \begin{table}[htbp]
     \centering
     \caption{FPGA resource consumption comparison for multiplier and adder with different types of data.}
-      \begin{tabular}{|l|r|r|r|r|r|r|r|r|r|} \hline
-      \multirow{2}[4]{*}{} & \multicolumn{4}{c|}{Xilinx Logic} & \multicolumn{3}{c|}{Xilinx DSP} & \multicolumn{2}{c|}{Altera DSP} \\ \cline{2-10}         
-       & \multicolumn{2}{c|}{multiplier} & \multicolumn{2}{c|}{adder} & \multicolumn{3}{c|}{multiply \& add} & \multicolumn{2}{c|}{multiply \& add} \\ \cline{2-10}
-            & \multicolumn{1}{c|}{LUT} & \multicolumn{1}{c|}{FF} & \multicolumn{1}{c|}{LUT} & \multicolumn{1}{c|}{FF} & \multicolumn{1}{c|}{LUT} & \multicolumn{1}{c|}{FF} & \multicolumn{1}{c|}{DSP} & \multicolumn{1}{c|}{ALM} & \multicolumn{1}{c|}{DSP} \\ \hline
-      fp32  & 708   & 858   & 430   & 749   & 800   & 1284  & 2     & 1     & 1 \\ \hline
-      fp16  & 221   & 303   & 211   & 337   & 451   & 686   & 1     & 213   & 1 \\ \hline
-      fixed32 & 1112  & 1143  & 32    & 32    & 111   & 64    & 4     & 64    & 3 \\ \hline
-      fixed16 & 289   & 301   & 16    & 16    & 0     & 0     & 1     & 0     & 1 \\ \hline
-      fixed8 & 75    & 80    & 8     & 8     & 0     & 0     & 1     & 0     & 1 \\ \hline
-      fixed4 & 17    & 20    & 4     & 4     & 0     & 0     & 1     & 0     & 1 \\ \hline
+      \begin{tabular}{l|rr|rr|rrr|rr} \toprule
+      \multirow{2}[4]{*}{} & \multicolumn{4}{c|}{Xilinx Logic} & \multicolumn{3}{c|}{Xilinx DSP} & \multicolumn{2}{c}{Altera DSP} \\ \cline{2-10}         
+       & \multicolumn{2}{c|}{multiplier} & \multicolumn{2}{c|}{adder} & \multicolumn{3}{c|}{multiply \& add} & \multicolumn{2}{c}{multiply \& add} \\ \cline{2-10}
+              & LUT   & FF    & LUT   & FF    & LUT   & FF    & DSP   & ALM   & DSP \\ \hline
+      fp32    & 708   & 858   & 430   & 749   & 800   & 1284  & 2     & 1     & 1 \\ %\hline
+      fp16    & 221   & 303   & 211   & 337   & 451   & 686   & 1     & 213   & 1 \\ %\hline
+      fixed32 & 1112  & 1143  & 32    & 32    & 111   & 64    & 4     & 64    & 3 \\ %\hline
+      fixed16 & 289   & 301   & 16    & 16    & 0     & 0     & 1     & 0     & 1 \\ %\hline
+      fixed8  & 75    & 80    & 8     & 8     & 0     & 0     & 1     & 0     & 1 \\ %\hline
+      fixed4  & 17    & 20    & 4     & 4     & 0     & 0     & 1     & 0     & 1 \\ %\hline
+      \bottomrule
       \end{tabular}
     \label{tab:mac}
-  \end{table}
+\end{table}
   
